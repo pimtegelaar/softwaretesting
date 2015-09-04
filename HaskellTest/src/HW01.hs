@@ -37,8 +37,12 @@ fromDigits = foldl addDigit 0
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+doubleEveryOther [] = []
+doubleEveryOther (x:xs) = x  : dother xs
 
+dother :: [Integer] -> [Integer]
+dother [] = []
+dother (x:xs) = x * 2 : doubleEveryOther xs
 -- Exercise 4 -----------------------------------------
 
 -- Calculate the sum of all the digits in every Integer.
