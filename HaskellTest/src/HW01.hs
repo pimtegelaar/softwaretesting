@@ -5,7 +5,7 @@ module HW01 where
 
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit = undefined
+lastDigit a = a `mod` 10
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
