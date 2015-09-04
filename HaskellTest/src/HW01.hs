@@ -47,8 +47,11 @@ dother (x:xs) = x * 2 : doubleEveryOther xs
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
+--sumDigits = undefined
+sumDigits x = sum (splitDigits x)
 
+splitDigits :: [Integer] -> [Integer]
+splitDigits = foldr ((++) . digits) []
 
 -- Exercise 5 -----------------------------------------
 
