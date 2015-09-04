@@ -15,6 +15,21 @@ testLastDigit (n, d) = lastDigit n == d
 testDropLastDigit :: (Integer, Integer) -> Bool
 testDropLastDigit (n, d) = dropLastDigit n == d
 
+testToRevDigits :: (Integer, [Integer]) -> Bool
+testToRevDigits (n, d) = toRevDigits n == d
+
+testDoubleEveryOther :: ([Integer], [Integer]) -> Bool
+testDoubleEveryOther (n, d) = doubleEveryOther n == d
+
+testSumDigits :: ([Integer], Integer) -> Bool
+testSumDigits (n, d) = sumDigits n == d
+
+testLuhn :: (Integer, Bool) -> Bool
+testLuhn (n, d) = luhn n == d
+
+testHanoi :: (Integer, Peg, Peg, Peg, [Move]) -> Bool
+testHanoi (n, p1, p2, p3, d) = hanoi n p1 p2 p3 == d
+
 ex1Tests :: [Test]
 ex1Tests = [ Test "lastDigit test" testLastDigit
              [(123, 3), (1234, 4), (5, 5), (10, 0), (0, 0)]
@@ -25,27 +40,37 @@ ex1Tests = [ Test "lastDigit test" testLastDigit
 -- Exercise 2 -----------------------------------------
 
 ex2Tests :: [Test]
-ex2Tests = []
+ex2Tests = [Test "toRevDigits test" testToRevDigits
+             [(123, [3,2,1]), (1234, [4,3,2,1]), (5, [5]), (10, [0,1]), (0, [0])]
+           ]
 
 -- Exercise 3 -----------------------------------------
 
 ex3Tests :: [Test]
-ex3Tests = []
+ex3Tests = [Test "testDoubleEveryOther test" testDoubleEveryOther
+             [([4, 9, 5, 5], [4, 18, 5, 10]), ([0, 0], [0, 0])]
+           ]
 
 -- Exercise 4 -----------------------------------------
 
 ex4Tests :: [Test]
-ex4Tests = []
+ex4Tests = [Test "testSumDigits test" testSumDigits
+             [([10, 5, 18, 4], 19)]
+           ]
 
 -- Exercise 5 -----------------------------------------
 
 ex5Tests :: [Test]
-ex5Tests = []
+ex5Tests = [Test "testLuhn test" testLuhn
+             [(5594589764218858, True), (1234567898765432, False)]
+           ]
 
 -- Exercise 6 -----------------------------------------
 
 ex6Tests :: [Test]
-ex6Tests = []
+ex6Tests = [Test "testHanoi test" testHanoi
+             [(2, "a", "b", "c", [("a","c"), ("a","b"), ("c","b")])]
+           ]
 
 -- All Tests ------------------------------------------
 
