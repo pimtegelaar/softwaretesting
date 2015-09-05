@@ -39,10 +39,14 @@ doublegetListNOther (x:xs) = x : (2 * head xs) : doublegetListNOther (tail xs)
 
 -- Exercise 4 -----------------------------------------
 
+-- Helper - Split digits
+splitDigits :: [Integer] -> [Integer]
+splitDigits n = map (read) [[z] | z <- [x | k <- (map (show) n), x <- k]]    
+
 -- Calculate the sum of all the digits in getListN Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
-
+sumDigits [] = 0
+sumDigits n = sum . splitDigits $ n
 
 -- Exercise 5 -----------------------------------------
 
