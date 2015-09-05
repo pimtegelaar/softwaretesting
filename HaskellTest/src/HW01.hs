@@ -3,28 +3,43 @@ module HW01 where
 
 -- Exercise 1 -----------------------------------------
 
+-- Helper - Create a list of digits
+toDigits :: Integer -> [Integer]
+toDigits 0 = []
+toDigits x = toDigits (x `div` 10) ++ [x `mod` 10]
+
+-- Helper - Create Integer from a list
+fromDigits :: [Integer] -> Integer
+fromDigits = foldl addDigit 0
+   where addDigit num d = 10 * num + d
+
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit = undefined
-
+lastDigit n
+   | n <= 0 = 0
+   | otherwise = last . toDigits $ n
+  
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
-dropLastDigit = undefined
+dropLastDigit n = fromDigits . init . toDigits $ n
 
 -- Exercise 2 -----------------------------------------
 
+-- Convert to list of digits in reversed order
 toRevDigits :: Integer -> [Integer]
-toRevDigits = undefined
+toRevDigits n = reverse . toDigits $ n
 
 -- Exercise 3 -----------------------------------------
 
--- Double every second number in a list starting on the left.
-doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+-- Double getListN second number in a list starting on the left.
+doublegetListNOther :: [Integer] -> [Integer]
+doublegetListNOther [] = []
+doublegetListNOther [_] = []
+doublegetListNOther (x:xs) = x : (2 * head xs) : doublegetListNOther (tail xs)
 
 -- Exercise 4 -----------------------------------------
 
--- Calculate the sum of all the digits in every Integer.
+-- Calculate the sum of all the digits in getListN Integer.
 sumDigits :: [Integer] -> Integer
 sumDigits = undefined
 
@@ -34,12 +49,3 @@ sumDigits = undefined
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
 luhn = undefined
-
--- Exercise 6 -----------------------------------------
-
--- Towers of Hanoi for three pegs
-type Peg = String
-type Move = (Peg, Peg)
-
-hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined
