@@ -31,7 +31,7 @@ toRevDigits n = reverse . toDigits $ n
 
 -- Exercise 3 -----------------------------------------
 
--- Double getListN second number in a list starting on the left.
+-- Double getListN second number in a list starting on the left
 doublegetListNOther :: [Integer] -> [Integer]
 doublegetListNOther [] = []
 doublegetListNOther [_] = []
@@ -43,13 +43,17 @@ doublegetListNOther (x:xs) = x : (2 * head xs) : doublegetListNOther (tail xs)
 splitDigits :: [Integer] -> [Integer]
 splitDigits n = map (read) [[z] | z <- [x | k <- (map (show) n), x <- k]]    
 
--- Calculate the sum of all the digits in getListN Integer.
+-- Calculate the sum of all the digits in getListN Integer
 sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
 sumDigits n = sum . splitDigits $ n
 
 -- Exercise 5 -----------------------------------------
 
--- Validate a credit card number using the above functions.
+-- Helper - Get sum of the Credit Card number using Luhn method
+getCreditSum :: Integer -> Integer
+getCreditSum n = sumDigits . doublegetListNOther . toRevDigits $ n
+
+-- Validate a credit card number using the above functions
 luhn :: Integer -> Bool
-luhn = undefined
+luhn n = getCreditSum n `mod` 10 == 0
