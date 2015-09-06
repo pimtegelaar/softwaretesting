@@ -67,7 +67,7 @@ testLuhn (input, expected) = luhn input == expected
 ex5Tests :: [Test]
 ex5Tests = [ Test "luhn test" testLuhn
                [
-                   (5594589764218858, True),
+                   (55945897642188583, True),
                    (1234567898765432, False)
                ]
            ]

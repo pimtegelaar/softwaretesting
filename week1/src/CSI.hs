@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wall #-}
 module CSI where
 
@@ -26,3 +27,15 @@ guilty = [x | x <- boys, length (accusers x) == 3]
  
 honest :: [Boy] -- Should return 3 elements
 honest = accusers (head guilty)
+
+test1 :: String
+test1 = "3 Boys are honest = " ++ show (length honest == 3) 
+
+test2:: String
+test2 = "1 boy is guilty = " ++ show (length guilty == 1)
+
+test3 :: String
+test3 = "The culprit is: " ++ show (Jack `elem` guilty)
+
+test :: IO ()
+test = putStr(test1 ++ "\n" ++  test2 ++ "\n" ++ test3 ++ "\n")
