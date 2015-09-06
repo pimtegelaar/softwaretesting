@@ -17,9 +17,9 @@ toRevDigits :: Integer -> [Integer]
 toRevDigits 0 = [0]
 toRevDigits x = reverseDigits x
 
-reverseDigits :: Integral x => x -> [x]
+reverseDigits :: Integer -> [Integer]
 reverseDigits 0 = []
-reverseDigits x = x `mod` 10 : reverseDigits (x `div` 10)
+reverseDigits x = lastDigit x : reverseDigits (dropLastDigit x)
 
 -- Slower version, but handles negatives
 toRevDigits2 :: Integer -> [Integer]
