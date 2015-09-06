@@ -13,7 +13,7 @@ says Matthew Carl = False
 says Matthew _ = True
 says Peter Matthew = True
 says Peter Jack = True
-says Peter x = False
+says Peter _ = False
 says Jack x = not(says Matthew x) && not(says Peter x)
 says Arnold x = says Matthew x /= says Peter x
 says Carl x = not(says Arnold x)
