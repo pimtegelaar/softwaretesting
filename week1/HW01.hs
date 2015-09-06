@@ -1,3 +1,10 @@
+--
+-- Software Testing - Week 1
+-- Erik Verhoofstad
+-- 06-09-2015
+--
+
+
 {-# OPTIONS_GHC -Wall #-}
 module HW01 where
 
