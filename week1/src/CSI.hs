@@ -1,10 +1,10 @@
---
--- Crime Scene Investigation
---
+{-# OPTIONS_GHC -Wall #-}
+module CSI where
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl
            deriving (Eq,Show)
            
+boys :: [Boy]
 boys = [Matthew, Peter, Jack, Arnold, Carl]
 
 says :: Boy -> Boy -> Bool

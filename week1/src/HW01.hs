@@ -1,10 +1,3 @@
---
--- Software Testing - Week 1
--- Erik Verhoofstad
--- 06-09-2015
---
-
-
 {-# OPTIONS_GHC -Wall #-}
 module HW01 where
 
@@ -12,11 +5,11 @@ module HW01 where
 
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit x = mod x 10
+lastDigit x = x `mod` 10
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
-dropLastDigit x = div x 10
+dropLastDigit x = x `div` 10
 
 -- Exercise 2 -----------------------------------------
 
@@ -35,16 +28,20 @@ doubleEveryOther (x:y:ys) = x : (y*2) : doubleEveryOther ys
 -- Exercise 4 -----------------------------------------
 
 -- Calculate the sum of all the digits in every Integer.
+
+digits :: Integer -> [Integer]
+digits = map (read . (:[])) . show
+
 sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
-sumDigits (x:xs) = (if(x <10)
-                   then x 
-	                 else (mod x 10) + (div x 10) ) 
-		               + sumDigits xs
+sumDigits x = sum (splitDigits x)
+
+splitDigits :: [Integer] -> [Integer]
+splitDigits = foldr ((++) . digits) []
 
 
 -- Exercise 5 -----------------------------------------
 
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
-luhn x = mod (sumDigits (doubleEveryOther (toRevDigits x))) 10 == 0
+luhn x = (lastDigit . sumDigits . doubleEveryOther . toRevDigits $ x) == 0

@@ -1,9 +1,4 @@
--- 
--- Software Testing - Week 1
--- Erik Verhoofstad
--- 06-09-2015
---
-
+{-# OPTIONS_GHC -Wall #-}
 module HW01Tests where
 
 import HW01
@@ -60,7 +55,6 @@ ex4Tests = [ Test "sumDigits test" testSumDigits
                    ([], 0),
                    ([5], 5),
                    ([1,3,7], 11),
-                   ([1,-1], 0),
                    ([10,5,18,4], 19)
                ]
            ]
