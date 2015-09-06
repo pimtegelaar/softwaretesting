@@ -1,0 +1,12 @@
+name:           week1
+version:        0.1
+cabal-version:  >=1.2
+build-type:     Simple
+author:         Pim
+
+executable week1
+  hs-source-dirs:  src
+  main-is:         HW01.hs
+  build-depends:   base >= 4
+  ghc-options:     -Wall
+
