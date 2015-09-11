@@ -54,5 +54,43 @@ quicksort (x:xs) =
    ++ [x]
    ++ quicksort [ a | a <- xs, a > x ]
 
+-- First order both lists, then compare them (modified class from 'Eq' to 'Ord')
+
 isPermutation :: Ord a => [a] -> [a] -> Bool
 isPermutation a b = if quicksort a == quicksort b then True else False
+
+-- Variant 2
+
+isPermutation' :: Eq a => [a] -> [a] -> Bool
+isPermutation' [] [] = True
+isPermutation' xs (y:ys) | length xs /= length (y:ys) = False
+                         | otherwise = isPermutation' (delete y xs) ys
+
+-- Exercise 3
+
+-- Helper
+
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+  insrt x [] = [[x]]
+  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+  
+-- Variant 2
+
+perms' :: Eq a => [a] -> [[a]]
+perms' [] = [[]]
+perms' xs = [ i:j | i <- xs, j <- perms' $ delete i xs ]
+
+-- Check whether list is a derangement of other list
+
+isDerangement :: Eq a => [a] -> [a] -> Bool
+isDerangement [] [] = True
+isDerangement xs ys = and [ x `elem` ys && (index x xs /= index x ys) | x <- xs ] where
+      index n (x:xs) | n == x = 0
+                     | otherwise = 1 + index n xs
+
+-- Generate all derangements for n-1 Int
+
+deran :: Int -> [[Int]]
+deran n = filter (\ p -> isDerangement p [0..n-1]) (perms [0..n-1])
