@@ -12,7 +12,7 @@ data Shape = NoTriangle | Equilateral
 
 triangle :: Integer -> Integer -> Integer -> Shape
 triangle x y z | x <= 0 || y <= 0 || z <= 0 = NoTriangle
-               | (x >= y + z || y >= x + z || z >= x + y) = NoTriangle
+               | x >= y + z || y >= x + z || z >= x + y = NoTriangle
                | x == y && y == z = Equilateral
                | x == y || x == z || y == z = Isosceles
                | x^2 + y^2 == z^2 = Rectangular
