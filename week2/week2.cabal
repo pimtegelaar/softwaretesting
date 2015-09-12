@@ -1,10 +1,10 @@
-name:           week
+name:           week2
 version:        0.1
 cabal-version:  >=1.2
 build-type:     Simple
 author:         pimt
 
-executable week
+executable Triangle.hs
   hs-source-dirs:  src
   main-is:         Main.hs
   build-depends:   base >= 4
