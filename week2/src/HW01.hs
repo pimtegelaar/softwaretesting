@@ -115,12 +115,18 @@ moveCharacters [] = []
 moveCharacters [x] = [x]
 moveCharacters (x:xs) = drop 4 ((x:xs) ++ take 4 (x:xs))
 
+-- Convert Char to Int via conversion table
+alphaToNumeric :: Char -> Int
+alphaToNumeric c
+   | isDigit c = read ([c])
+   | not (isAlpha c) = error ("invalid characters used " ++ show c)
+   | otherwise = ord (c) - 55
+
 -- Convert non-numeric characters to numbers 
--- Not correct yet, digitToInt is not the correct Function
 
 convertCharacters :: String -> String
 convertCharacters [] = []
-convertCharacters (x:xs) = show ( digitToInt (x)) ++ convertCharacters (xs)
+convertCharacters (x:xs) = show ( alphaToNumeric (x)) ++ convertCharacters (xs)
 
 -- Prepare String for IBAN check
 
