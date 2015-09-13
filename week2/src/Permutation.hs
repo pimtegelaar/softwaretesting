@@ -24,3 +24,9 @@ tests = putStr (
     test [1, 2, 3] [1, 2, 3] True ++ -- equal
     test [1, 2, 3] [3, 1, 2] True  -- different order
     )
+    
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = concatMap (insrt x) (perms xs) where
+  insrt x [] = [[x]]
+  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
