@@ -1,4 +1,4 @@
-module TestTriangle where
+module TriangleTests where
 
 import Triangle
 import Testing
