@@ -28,4 +28,4 @@ subfac :: Int -> Int
 subfac 0 = 0
 subfac 1 = 0
 subfac 2 = 1
-subfac n = (n-1) * (subfactorial (n-1) + subfactorial (n-2))
+subfac n = (n-1) * (subfac (n-1) + subfac (n-2))
