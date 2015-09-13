@@ -12,7 +12,6 @@ removeSpaces [] = []
 removeSpaces (x:xs) = filter (/=' ') (x:xs)
 
 -- Move first four characters to end of String
--- Invalid output when x > 1 and x < 4
 
 moveCharacters :: String -> String
 moveCharacters [] = []
