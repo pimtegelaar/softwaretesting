@@ -1,6 +1,3 @@
---
--- Software Testing - Week 2
---
 module Triangle where
 
 import Data.List
