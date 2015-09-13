@@ -1,9 +1,9 @@
-module Iban
-
-where 
+module Iban where
 
 import Data.List
 import Data.Char
+
+-- Approximate time spend on this exercise: 4 hours
 
 -- Remove spaces from a String
 
@@ -36,10 +36,10 @@ convertCharacters (x:xs) = show ( alphaToNumeric (x)) ++ convertCharacters (xs)
 
 -- Prepare String for IBAN check
 
-convertToIBAN :: String ->  Integer
-convertToIBAN [] = 0
-convertToIBAN [x] = 0
-convertToIBAN (x:xs) = read (convertCharacters (moveCharacters (removeSpaces (x:xs)))) :: Integer
+convertToIban :: String ->  Integer
+convertToIban [] = 0
+convertToIban [x] = 0
+convertToIban (x:xs) = read (convertCharacters (moveCharacters (removeSpaces (x:xs)))) :: Integer
 
 -- Verify Integer against MOD 97
 
@@ -51,4 +51,4 @@ checkMOD97 x = x `mod` 97 == 1
 iban :: String -> Bool
 iban [] = False
 iban [x] = False
-iban (x:xs) = checkMOD97 (convertToIBAN (x:xs))
+iban (x:xs) = checkMOD97 (convertToIban (x:xs))

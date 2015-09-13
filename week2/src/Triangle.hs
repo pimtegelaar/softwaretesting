@@ -1,7 +1,8 @@
 module Triangle where
 
 import Data.List
-import System.Random
+
+-- Approximate time spend for on exercise: 2 hours
 
 data Shape = NoTriangle | Equilateral 
             | Isosceles  | Rectangular | Other deriving (Eq,Show)

@@ -3,9 +3,6 @@ module TriangleTests where
 import Triangle
 import Testing
 
--- Tested by trying various inputs for the function
--- Approximate time spend for this exercise: 3 hours
-
 testTriangle :: (Integer, Integer, Integer, Shape) -> Bool
 testTriangle (a, b, c, s) = triangle a b c == s
 
