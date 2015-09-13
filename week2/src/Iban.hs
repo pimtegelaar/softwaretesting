@@ -21,21 +21,19 @@ moveCharacters (x:xs) = drop 4 ((x:xs) ++ take 4 (x:xs))
 -- Throw error when illegal character is used (e.g. %)
 alphaToNumeric :: Char -> Int
 alphaToNumeric c
-   | isDigit c = read ([c])
+   | isDigit c = read [c]
    | not (isAlpha c) = error ("invalid characters used " ++ show c)
-   | otherwise = ord (c) - 55
+   | otherwise = ord c - 55
 
 -- Convert non-numeric characters to numbers 
 
 convertCharacters :: String -> String
-convertCharacters [] = []
-convertCharacters (x:xs) = show ( alphaToNumeric (x)) ++ convertCharacters (xs)
+convertCharacters = foldr ((++) . show . alphaToNumeric) []
 
 -- Prepare String for IBAN check
 
 convertToIban :: String ->  Integer
 convertToIban [] = 0
-convertToIban [x] = 0
 convertToIban (x:xs) = read (convertCharacters (moveCharacters (removeSpaces (x:xs)))) :: Integer
 
 -- Verify Integer against MOD 97
