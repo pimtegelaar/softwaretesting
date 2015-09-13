@@ -9,6 +9,7 @@ executable Triangle.hs
   main-is:         Main.hs
   build-depends:   
                    base >= 4,
-                   random
+                   random,
+                   containers
   ghc-options:     -Wall
 

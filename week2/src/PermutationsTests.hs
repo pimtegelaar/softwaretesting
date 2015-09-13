@@ -1,13 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Permutation where
+module PermutationsTests where
 
-isPermutation :: Eq a => [a] -> [a] -> Bool
-isPermutation x y = length x == length y && containsAll x y && containsAll y x
-
-containsAll :: Eq a => [a] -> [a] -> Bool
-containsAll [] _ = True
-containsAll _ [] = False
-containsAll (x:xs) y = x `elem` y && containsAll xs y
+import Permutations
 
 test ::  (Eq a, Show a) => [a] -> [a] -> Bool -> String
 test x y result = show x ++ " " ++ show y ++ " == " ++ show result ++ " -> " ++ (if isPermutation x y == result then "Passed" else "Failed") ++ "\n"
@@ -25,13 +19,7 @@ tests = putStr (
     test [1, 2, 3] [1, 2, 3] True ++ -- equal
     test [1, 2, 3] [3, 1, 2] True  -- different order
     )
-    
-perms :: (Eq a, Show a) => [a] -> [[a]]
-perms [] = [[]]
-perms (x:xs) = concatMap (insrt x) (perms xs) where
-  insrt x [] = [[x]]
-  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
-  
+
 testPerms :: (Eq a, Show a) => [a] -> [[a]] -> String
 testPerms [] _ = ""
 testPerms (_ : _) [] = ""
@@ -42,3 +30,4 @@ testAllPerms x = putStr(testPerms x (perms x)) -- confirms that all permutations
 
 testJobErikPim :: IO ()
 testJobErikPim = testAllPerms ["Job","Erik","Pim"]
+    
