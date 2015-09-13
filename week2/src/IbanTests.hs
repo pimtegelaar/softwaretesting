@@ -3,8 +3,8 @@ module IbanTests where
 import Iban
 import Testing
 
--- Did not have time left anymore to implement random build of Strings.
--- This would be necessary to automate the generation of IBAN Strings.
+-- Did not have time left to implement random build of Strings.
+-- This is necessary to further automate the generation of IBAN Strings.
 
 testIban :: (String, Bool) -> Bool
 testIban (nr, b) = iban nr == b
