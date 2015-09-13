@@ -1,6 +1,5 @@
 --
 -- Software Testing - Week 2
--- Erik Verhoofstad
 --
 -- Time spent:
 --   functions: 1 hour
