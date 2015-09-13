@@ -27,8 +27,7 @@ testAgainstPerms' :: Eq a => [a] -> [Bool]
 testAgainstPerms' xs = map (isDerangement xs) (perms xs)  
 
 countSucceeded :: [Bool] -> Int
-countSucceeded [] = 0
-countSucceeded (x:xs) = (if x == True then 1 else 0) + countSucceeded xs
+countSucceeded = foldr (\ x -> (+) (if x then 1 else 0)) 0
 
 -- Runs all the tests
 tests :: IO ()
