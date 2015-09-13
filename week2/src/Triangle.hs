@@ -1,6 +1,5 @@
 module Triangle where
 
-import Data.List
 
 -- Approximate time spend for on exercise: 2 hours
 
