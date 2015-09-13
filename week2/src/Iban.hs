@@ -3,7 +3,7 @@ module Iban where
 import Data.List
 import Data.Char
 
--- Approximate time spend on this exercise: 4 hours
+-- Approximate time spend on this exercise: 5 hours
 
 -- Remove spaces from a String
 

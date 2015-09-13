@@ -3,6 +3,11 @@ module IbanTests where
 import Iban
 import Testing
 
+-- Did not have time left anymore to implement random build of Strings.
+-- This would be necessary to automate the generation of IBAN Strings,
+-- did not figure out in time how to do this. For now keep the
+-- 'manual' tests.
+
 testIban :: (String, Bool) -> Bool
 testIban (nr, b) = iban nr == b
 
