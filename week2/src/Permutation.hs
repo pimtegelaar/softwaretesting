@@ -40,3 +40,5 @@ testPerms x (y:ys) = test x y True ++ testPerms x ys
 testAllPerms :: (Show a, Eq a) => [a] -> IO ()
 testAllPerms x = putStr(testPerms x (perms x)) -- confirms that all permutations of a list are permutations...
 
+testJobErikPim :: IO ()
+testJobErikPim = testAllPerms ["Job","Erik","Pim"]
