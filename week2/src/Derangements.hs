@@ -9,7 +9,6 @@ module Derangements
 
 where
 
-import Data.List
 import Permutations
 
 isDerangement :: Eq a => [a] -> [a] -> Bool
