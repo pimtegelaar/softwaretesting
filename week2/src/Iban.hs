@@ -9,7 +9,6 @@ import Data.Char
 
 removeSpaces :: String -> String
 removeSpaces [] = []
-removeSpaces [x] = [x]
 removeSpaces (x:xs) = filter (/=' ') (x:xs)
 
 -- Move first four characters to end of String
@@ -17,7 +16,6 @@ removeSpaces (x:xs) = filter (/=' ') (x:xs)
 
 moveCharacters :: String -> String
 moveCharacters [] = []
-moveCharacters [x] = [x]
 moveCharacters (x:xs) = drop 4 ((x:xs) ++ take 4 (x:xs))
 
 -- Convert Char to Int via conversion table
