@@ -25,6 +25,6 @@ in_list a (x:xs) = a == x || in_list a xs
 -- Give all the permutations from a given list. (from Workshop 2)
 perms :: [a] ->[[a]]
 perms [] = [[]]
-perms (x:xs) = concat (map (insrt x) (perms xs)) where
+perms (x:xs) = concatMap (insrt x) (perms xs) where
   insrt x [] = [[x]]
   insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
