@@ -1,32 +1,7 @@
-module Lab2 where
+module HW02 where
  
 import Data.List
 import Data.Char
-import System.Random
-
--- Testing Functions
-
-getRandomInt :: Int -> IO Int
-getRandomInt n = getStdRandom (randomR (0,n))
-
-randomFlip :: Int -> IO Int
-randomFlip x = do 
-   b <- getRandomInt 1
-   if b==0 then return x else return (-x)
-
-genIntList :: IO [Int]
-genIntList = do 
-  k <- getRandomInt 20
-  n <- getRandomInt 10
-  getIntL k n
-  
-getIntL :: Int -> Int -> IO [Int]
-getIntL _ 0 = return []
-getIntL k n = do 
-   x <- getRandomInt k
-   y <- randomFlip x
-   xs <- getIntL k (n-1)
-   return (y:xs)
 
 -- Exercise 1
 
@@ -44,6 +19,9 @@ triangle a b c
    | a^2 + c^2 == b^2 = Rectangular
    | otherwise = Other
 
+rectangular :: (Integer, Integer, Integer)
+rectangular = (1,2,3)
+   
 -- Exercise 2
 
 -- Helper
@@ -116,6 +94,7 @@ moveCharacters [x] = [x]
 moveCharacters (x:xs) = drop 4 ((x:xs) ++ take 4 (x:xs))
 
 -- Convert Char to Int via conversion table
+-- Throw error when illegal character is used (e.g. %)
 alphaToNumeric :: Char -> Int
 alphaToNumeric c
    | isDigit c = read ([c])
