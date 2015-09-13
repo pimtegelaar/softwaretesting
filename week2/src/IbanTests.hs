@@ -78,5 +78,8 @@ ibanTests = [ Test "IBAN Tests" testIban
              , ("9999999999999999999995", False)
              , ("9999999999999999999994", False)
              , ("9976999999999999999999", True)
+             , ("RAB", False)
+             , ("", False)
+             , ("1", False)
              ]
            ]
