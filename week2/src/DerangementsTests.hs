@@ -10,6 +10,7 @@ module DerangementsTest
 where
 
 import Derangements
+import Permutations
 
 -- Test whether the output of isDerangement matches an expected value.
 testIsDerangement :: (Eq a, Show a) => [a] -> [a] -> Bool -> String
