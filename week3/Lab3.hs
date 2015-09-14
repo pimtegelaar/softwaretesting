@@ -5,11 +5,25 @@ import System.Random
 
 
 --
--- Determines whether a given formula is a contradiction
+-- Determines whether a given formula is a contradiction.
 --
 contradiction :: Form -> Bool
-contradiction f = not.any (\ v -> evl v f) (allVals f)
+contradiction f = not $ any (\ v -> evl v f) (allVals f)
 
+--
+-- Determines whether a given formula is a tautology.
+--
 tautology :: Form -> Bool
 tautology = all (\ v -> evl v f) (allVals f)
 
+--
+--
+--
+entails :: Form -> Form -> Bool
+entails f g = 
+
+--
+-- Determines whether two given formulas are equivalant.
+--
+equiv :: Form -> Form -> Bool
+equiv f g = all (\v -> evl v f == evl v g) (allVals f)
