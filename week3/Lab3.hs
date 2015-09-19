@@ -3,7 +3,6 @@ module Lab3 where
 import Data.List
 import System.Random
 
-
 --
 -- Determines whether a given formula is a contradiction.
 --
@@ -14,13 +13,13 @@ contradiction f = not $ any (\ v -> evl v f) (allVals f)
 -- Determines whether a given formula is a tautology.
 --
 tautology :: Form -> Bool
-tautology = all (\ v -> evl v f) (allVals f)
+tautology f = all (\ v -> evl v f) (allVals f)
 
 --
---
+-- Determine whether one formula is a consequent of another formula.
 --
 entails :: Form -> Form -> Bool
-entails f g = 
+entails f g = all (\ v -> evl v (Impl f g)) (allVals f)
 
 --
 -- Determines whether two given formulas are equivalant.
