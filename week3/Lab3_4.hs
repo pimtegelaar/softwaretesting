@@ -11,7 +11,7 @@ import Lab3_3
 --           , 2 hours to write tests/properties
 --           , 2 hours to make formulas random )
 
--- Generate random set of formulas which can be used in QuickCheck
+-- Generate formulas random which are used by QuickCheck
 instance Arbitrary Form where
   arbitrary = intToForm2 <$> choose (1,5) <*> choose (1,100) <*> choose (1,100)
 
@@ -29,7 +29,7 @@ intToForm2 5 a b = Impl (intToForm1 a) (intToForm1 b)
 -- Compare truth tables for CNF formulas with arbitrary formulas
 quickCheckTruthTable = quickCheckResult (\ f -> allVals (cnf (f)) == allVals (f) )
 
--- With intermediate results
+-- Same but with intermediate results
 quickCheckTruthTableVerbose = verboseCheck (\ f -> allVals (cnf (f)) == allVals (f) )
 
 -- Compare CNF and arbitrary formulas with regard to satisfiability
