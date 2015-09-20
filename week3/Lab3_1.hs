@@ -3,6 +3,10 @@ module Lab3_1 where
 import Data.List
 import System.Random
 import Lecture3
+import Test.QuickCheck
+
+instance Arbitrary Form where
+  arbitrary = elements [form1,form2]
 --
 -- Determines whether a given formula is a contradiction.
 --
@@ -26,3 +30,5 @@ entails f g = all (\ v -> evl v (Impl f g)) (allVals f)
 --
 equiv :: Form -> Form -> Bool
 equiv f g = all (\v -> evl v f == evl v g) (allVals f)
+
+testEquiv = quickCheckResult (\ x y -> equiv x y == equiv y x)
