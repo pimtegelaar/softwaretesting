@@ -6,6 +6,11 @@ import Control.Applicative
 import Lab3_1
 import Lab3_3
 
+-- Time spent: 8 hours 
+--           ( 4 hours documentation QuickCheck
+--           , 2 hours to write tests/properties
+--           , 2 hours to make formulas random )
+
 -- Generate random set of formulas which can be used in QuickCheck
 instance Arbitrary Form where
   arbitrary = intToForm2 <$> choose (1,5) <*> choose (1,100) <*> choose (1,100)

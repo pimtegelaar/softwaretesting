@@ -4,6 +4,8 @@ import Data.List
 import System.Random
 import Lecture3
 
+-- Time spent: 2 hours
+
 --
 -- Determines whether a given formula is a contradiction.
 --

@@ -3,6 +3,7 @@ module Lab3_3 where
 import Data.List
 import System.Random
 import Lecture3
+
 -- Time spent: 3 hours.
 -- Yes, that's about 30 min. per line of code.
 
