@@ -7,6 +7,9 @@ import Test.QuickCheck
 instance Arbitrary Form where
   arbitrary = elements [form1,form2]
   
+-- form is always equivalent with itself
+testEquivWithItself = quickCheckResult (\ x -> equiv x x)
+
 -- equivalence is independent of order
 testEquivInAnyOrder = quickCheckResult (\ x y -> equiv x y == equiv y x)
 
