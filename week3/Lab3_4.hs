@@ -2,6 +2,7 @@ module Lab3_4 where
 
 import Test.QuickCheck
 import Lecture3
+import Lab3_1
 import Lab3_3
 
 -- Try with set of fixed formulas to compare truth tables between formulas 
@@ -23,15 +24,21 @@ instance Arbitrary Form where
   arbitrary = elements [form4, form5, form6, form7, form8, form9, form10]
 
 -- Compare truth tables for CNF formulas with arbitrary formulas
-quickCheckCNF = quickCheckResult (\ f -> allVals (cnf (f)) == allVals (f) )
+quickCheckTruthTable = quickCheckResult (\ f -> allVals (cnf (f)) == allVals (f) )
 
 -- With intermediate results
-quickCheckVerbose = verboseCheck (\ f -> allVals (cnf (f)) == allVals (f) )
+quickCheckTruthTableVerbose = verboseCheck (\ f -> allVals (cnf (f)) == allVals (f) )
+
+-- Compare CNF and arbitrary formulas with regard to satisfiability
+quickCheckSatisfiable = quickCheckResult (\ f -> satisfiable (cnf (f)) == satisfiable (f) )
+
+-- Compare CNF and arbitrary formulas with regard to contradictions
+quickCheckContradiction = quickCheckResult (\ f -> contradiction (cnf (f)) == contradiction (f) )
 
 -- Attempt to make dynamic check
-checkQuick :: (Form -> [Valuation]) -> (Form -> Form) -> IO Result
+checkQuick :: Eq a => (Form -> a) -> (Form -> Form) -> IO Result
 checkQuick g h = quickCheckResult (\ f -> g (h (f)) == g (f) )
 
 -- Verbose version
-checkVerbose :: (Form -> [Valuation]) -> (Form -> Form) -> IO ()
+checkVerbose :: Eq a => (Form -> a) -> (Form -> Form) -> IO ()
 checkVerbose g h = verboseCheck (\ f -> g (h (f)) == g (f) )
