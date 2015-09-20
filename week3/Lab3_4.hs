@@ -22,11 +22,16 @@ form10 = Impl form8 form7
 instance Arbitrary Form where
   arbitrary = elements [form4, form5, form6, form7, form8, form9, form10]
 
+-- Compare truth tables for CNF formulas with arbitrary formulas
+quickCheckCNF = quickCheckResult (\ f -> allVals (cnf (f)) == allVals (f) )
+
+-- With intermediate results
+quickCheckVerbose = verboseCheck (\ f -> allVals (cnf (f)) == allVals (f) )
+
+-- Attempt to make dynamic check
 checkQuick :: (Form -> [Valuation]) -> (Form -> Form) -> IO Result
 checkQuick g h = quickCheckResult (\ f -> g (h (f)) == g (f) )
 
--- Execute following Function to compare truth tables against arbitrary formulas:
--- quickCheckResult (\ f -> allVals (cnf (f)) == allVals (f) )
-
--- With intermediate results:
--- verboseCheck (\ f -> allVals (cnf (f)) == allVals (f) )
+-- Verbose version
+checkVerbose :: (Form -> [Valuation]) -> (Form -> Form) -> IO ()
+checkVerbose g h = verboseCheck (\ f -> g (h (f)) == g (f) )
