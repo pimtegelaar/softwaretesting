@@ -25,7 +25,7 @@ instance Arbitrary Form where
   arbitrary = elements [ intToForm1 1 1
                        , intToForm2 1 2 3, intToForm2 2 4 5
                        , intToForm2 3 6 7, intToForm2 4 8 9
-					   ]
+                                           ]
 --  arbitrary = elements [form4, form5, form6, form7, form8, form9, form10]
 
 -- Compare truth tables for CNF formulas with arbitrary formulas
