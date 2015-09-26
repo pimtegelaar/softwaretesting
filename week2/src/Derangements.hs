@@ -18,6 +18,7 @@ isDerangement xs ys = isPermutation xs ys && isDerangement' xs ys
 isDerangement' :: Eq a => [a] -> [a] -> Bool
 isDerangement' [] [] = True
 isDerangement' (x:xs) (y:ys) = x /= y && isDerangement' xs ys
+isDerangement' _ _ = False
 
 deran :: Eq a => [a] -> [[a]]
 deran xs = [x | x <- perms xs, isDerangement x xs]
