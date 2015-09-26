@@ -30,3 +30,7 @@ getIntL k n = do
 
 setInt :: Set Int -> Set Int
 setInt s = s
+
+-- Random Generator
+
+-- QuickCheck
