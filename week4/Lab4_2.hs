@@ -3,34 +3,37 @@ module Lab4_2 where
 import SetOrd
 import System.Random
 import Test.QuickCheck
+import Lecture2
 
--- Time Spent
+-- Time Spent: 2 hours
 
-getRandomInt :: Int -> IO Int
-getRandomInt n = getStdRandom (randomR (0,n))
+-- Assignment: 
+-- Implement a random data generator for the datatype Set Int, where Set is as 
+-- defined in SetOrd.hs. First do this from scratch, next give a version that uses 
+-- QuickCheck to random test this datatype.
+-- (Deliverables: two random test generators, indication of time spent.)
 
-randomFlip :: Int -> IO Int
-randomFlip x = do 
-   b <- getRandomInt 1
-   if b==0 then return x else return (-x)
-
-genIntList :: IO [Int]
-genIntList = do 
-  k <- getRandomInt 20
-  n <- getRandomInt 10
-  getIntL k n
-
-getIntL :: Int -> Int -> IO [Int]
-getIntL _ 0 = return []
-getIntL k n = do 
-   x <-  getRandomInt k
-   y <- randomFlip x
-   xs <- getIntL k (n-1)
-   return (y:xs)
-
-setInt :: Set Int -> Set Int
-setInt s = s
+-- Create Set of Int
+  
+setInt :: [Int] -> Set Int
+setInt i = Set i
 
 -- Random Generator
+
+no_duplicates :: Set Int -> Set Int -> Bool
+no_duplicates a b = True
+
+testSet :: Int -> Int -> ([Int] -> Set Int)
+                      -> (Set Int -> Set Int -> Bool) -> IO ()
+testSet k n f r = if k == n then print (show n ++ " tests passed")
+                else do
+                  xs <- genIntList
+                  if r (Set xs) (f xs) then
+                    do print ("pass on: " ++ show xs)
+                       testSet (k+1) n f r
+                  else error ("failed test on: " ++ show xs)
+
+testSets :: ([Int] -> Set Int) -> (Set Int -> Set Int -> Bool) -> IO ()
+testSets f p = testSet 1 10 f p
 
 -- QuickCheck
