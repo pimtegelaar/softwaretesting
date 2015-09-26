@@ -3,15 +3,38 @@ module Lab4_2 where
 import SetOrd
 import System.Random
 import Test.QuickCheck
-import Lecture2
 
--- Time Spent: 2 hours
+-- Time Spent: 5 hours
 
 -- Assignment: 
 -- Implement a random data generator for the datatype Set Int, where Set is as 
 -- defined in SetOrd.hs. First do this from scratch, next give a version that uses 
 -- QuickCheck to random test this datatype.
 -- (Deliverables: two random test generators, indication of time spent.)
+
+-- Helper functions
+
+getRandomInt :: Int -> IO Int
+getRandomInt n = getStdRandom (randomR (0,n))
+
+randomFlip :: Int -> IO Int
+randomFlip x = do 
+  b <- getRandomInt 1
+  if b==0 then return x else return (-x)
+
+genIntList :: IO [Int]
+genIntList = do 
+  k <- getRandomInt 20
+  n <- getRandomInt 10
+  getIntL k n
+
+getIntL :: Int -> Int -> IO [Int]
+getIntL _ 0 = return []
+getIntL k n = do 
+  x <-  getRandomInt k
+  y <- randomFlip x
+  xs <- getIntL k (n-1)
+  return (y:xs)
 
 -- Create Set of Int
   
@@ -28,6 +51,8 @@ isSameSet a b = a == b
 isIdempotent :: Set Int -> Set Int -> Bool
 isIdempotent a b = unionSet a b == a
 
+-- Test function with random generator
+
 testSet :: Int -> Int -> ([Int] -> Set Int)
                       -> (Set Int -> Set Int -> Bool) -> IO ()
 testSet k n f r = if k == n then print (show n ++ " tests passed")
@@ -42,3 +67,15 @@ testSets :: ([Int] -> Set Int) -> (Set Int -> Set Int -> Bool) -> IO ()
 testSets f p = testSet 1 10 f p
 
 -- QuickCheck
+
+instance (Integral a, Arbitrary a) => Arbitrary (Set a) where
+  arbitrary = do a <- arbitrary
+                 b <- arbitrary
+                 return (Set [a, b])
+
+setInt' :: Set Int -> Set Int
+setInt' i = i
+
+quickCheckSetVerbose = verboseCheck (\ s -> s == setInt' (s) )
+
+quickCheckSet = quickCheckResult (\ s -> s == setInt' (s) )
