@@ -18,6 +18,7 @@ says Peter _ = False
 says Jack x = not(says Matthew x) && not(says Peter x)
 says Arnold x = says Matthew x /= says Peter x
 says Carl x = not(says Arnold x)
+says _ _ = False
 
 accusers :: Boy -> [Boy]
 accusers b = [x | x <- boys, says x b]
