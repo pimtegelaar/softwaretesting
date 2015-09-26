@@ -20,8 +20,13 @@ setInt i = Set i
 
 -- Random Generator
 
-no_duplicates :: Set Int -> Set Int -> Bool
-no_duplicates a b = True
+isSameSet :: Set Int -> Set Int -> Bool
+isSameSet a b = a == b
+
+-- Union results in deviating Set?
+
+isIdempotent :: Set Int -> Set Int -> Bool
+isIdempotent a b = unionSet a b == a
 
 testSet :: Int -> Int -> ([Int] -> Set Int)
                       -> (Set Int -> Set Int -> Bool) -> IO ()
