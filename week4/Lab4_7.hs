@@ -14,14 +14,14 @@ import Lab4_6
 -- Determines whether a given relation is symmetric.
 --
 isSymmetric :: Ord a => Rel a -> Bool
-isSymmetric [] = True
+isSymmetric [] = False
 isSymmetric r = all (\(x,y) -> elem (y,x) r) r
 
 --
 -- Determines whether a given relation is asymmetric.
 --
 isAsymmetric :: Ord a => Rel a -> Bool
-isAsymmetric [] = True
+isAsymmetric [] = False
 isAsymmetric r = not $ any (\(x,y) -> elem (y,x) r) r
 
 --
@@ -29,7 +29,7 @@ isAsymmetric r = not $ any (\(x,y) -> elem (y,x) r) r
 -- (Taken from the book, page 175)
 --
 isTransitive :: Ord a => Rel a -> Bool
-isTransitive [] = True
+isTransitive [] = False
 isTransitive r = and [trans pair r | pair <- r] where 
                  trans (x,y) r = and [ elem (x,v) r | (u,v) <- r, u == y ]
 
@@ -63,8 +63,20 @@ testRels f p = testRel 1 10 f p
 
 -- QuickCheck
 
--- Verify that the Symmetric Closure of the Symmetric Closure is the same output
+-- Verify that the Symmetric Closure of the Symmetric Closure is the same
 propSymClos :: Rel Int -> Rel Int -> Bool
 propSymClos xs ys = symClos xs == symClos (symClos xs)
 
-main = quickCheck propSymClos
+-- By definition, a relation cannot be both symmetric and asymmetric
+propSymNotAsym :: Rel Int -> Bool
+propSymNotAsym xs = not (isAsymmetric (symClos xs))
+
+-- Similar, but show length of test cases
+propSymNotAsym' :: Rel Int -> Property
+propSymNotAsym' xs = collect (length xs) $ not (isAsymmetric (symClos xs))
+
+-- Verify that the Transitive Closure of the Transitive Closure is the same
+propTrClos :: Rel Int -> Rel Int -> Bool
+propTrClos xs ys = trClos xs == trClos (trClos xs)
+
+main = quickCheck propSymNotAsym'
