@@ -6,12 +6,6 @@ import Test.QuickCheck
 
 -- Time Spent: 5 hours
 
--- Assignment: 
--- Implement a random data generator for the datatype Set Int, where Set is as 
--- defined in SetOrd.hs. First do this from scratch, next give a version that uses 
--- QuickCheck to random test this datatype.
--- (Deliverables: two random test generators, indication of time spent.)
-
 -- Helper functions
 
 getRandomInt :: Int -> IO Int
@@ -46,7 +40,7 @@ setInt i = Set i
 isSameSet :: Set Int -> Set Int -> Bool
 isSameSet a b = a == b
 
--- Union results in deviating Set?
+-- Sample property, Function is not correct yet
 
 isIdempotent :: Set Int -> Set Int -> Bool
 isIdempotent a b = unionSet a b == a
