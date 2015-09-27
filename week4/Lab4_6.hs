@@ -4,7 +4,7 @@ import Data.List
 import SetOrd
 import Lab4_5
 
--- Time Spent: 2 hours
+-- Time Spent: 3 hours
 
 infixr 5 @@
 
@@ -19,4 +19,11 @@ r @@ s = nub [ (x,z) | (x,y) <- r, (w,z) <- s, y == w ]
 --
 trClos :: Ord a => Rel a -> Rel a
 trClos [] = []
-trClos (x:xs) = r ++ (r @@ r)
+trClos r = addEdges (until (== (addEdges r)) (addEdges) r)
+
+--
+-- Adds transitive edges to a given relation. (R U R2)
+--
+addEdges :: Ord a => Rel a -> Rel a
+addEdges [] = []
+addEdges r = union (nub r) (r @@ r)
