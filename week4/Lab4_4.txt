@@ -1,0 +1,7 @@
+Chapter 5:
+
+* Page 159/160 - I don't understand how to interpret the diagrams, it does not contain any information about this?
+* Page 164 - The concept of 'soundness' and 'completeness' are not entirely clear. I don't understand the definition: relation 'provable' is a proper subset of 'entails' and the other way around.
+* Page 168 - I don't understand how the subsequent sets of A (A2, A3, A4) can be determined?
+* Page 169 - Proposition 5.42 - How does this proof show that R+ is the smallest transitive relation? I understand that it shows transitivity, but why 'smallest'?
+* Page 169 - Is the 'least' transitive relation something else as the 'smallest' transitive relation?
