@@ -22,10 +22,10 @@ tautology f = all (\ v -> evl v f) (allVals f)
 -- Determine whether one formula is a consequent of another formula.
 --
 entails :: Form -> Form -> Bool
-entails f g = (allVals f == allVals g) && all (\ v -> evl v (Impl f g)) (allVals f)
+entails f g = (length (propNames f) == length (propNames g)) && all (\ v -> evl v (Impl f g)) (allVals f)
 
 --
 -- Determines whether two given formulas are equivalent.
 --
 equiv :: Form -> Form -> Bool
-equiv f g = all (\v -> evl v f == evl v g) (allVals f)
+equiv f g = (length (propNames f) == length (propNames g)) &&  all (\v -> evl v f == evl v g) (allVals f)
