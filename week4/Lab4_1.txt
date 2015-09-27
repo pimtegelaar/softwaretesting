@@ -1,5 +1,13 @@
-Chapter 4
+Chapter 4:
 
 Erik
 
 * Page 126 - I don't understand what is expected in exercise 4.14
+
+Job
+
+* Page 119 - Exercise 4.7 -  I don't understand how to start here. How to determine what you must show? What is the first step?
+* Page 131 - Exercise 4.26 - Again, I don't know how to start. What is a 'logical translation' in this case?
+* Page 132 - Exercise 4.33 - How to show for example the first one? What are the first logical questions?
+* Page 134 - Definition 4.36 - I understand A * A, but what would be the result if it is A * A * A (or more)?
+* Page 154 - Exercise 4.57 - I have difficulty to understand how the power of Powersets work. How to calculate/show this? 
