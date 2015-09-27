@@ -63,7 +63,8 @@ testRels f p = testRel 1 10 f p
 
 -- QuickCheck
 
--- Verify that the Symmetric Closure of the Symmetric Closure is the same
+-- Verify that the Symmetric Closure is the same as the
+-- Symmetric Closure of the Symmetric Closure
 propSymClos :: Rel Int -> Rel Int -> Bool
 propSymClos xs ys = symClos xs == symClos (symClos xs)
 
@@ -75,7 +76,8 @@ propSymNotAsym xs = not (isAsymmetric (symClos xs))
 propSymNotAsym' :: Rel Int -> Property
 propSymNotAsym' xs = collect (length xs) $ not (isAsymmetric (symClos xs))
 
--- Verify that the Transitive Closure of the Transitive Closure is the same
+-- Verify that the Transitive Closure is the same as the
+-- Transitive Closure of the Transitive Closure
 propTrClos :: Rel Int -> Rel Int -> Bool
 propTrClos xs ys = trClos xs == trClos (trClos xs)
 
