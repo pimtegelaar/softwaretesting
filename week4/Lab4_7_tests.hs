@@ -65,7 +65,7 @@ getRandomInt n = getStdRandom (randomR (0,n))
 --  y <- randomFlip x
 --  xs <- getIntL k (n-1)
 --  return (x:xs)
-				 
+                                 
 
 -- Testable properties
 --
