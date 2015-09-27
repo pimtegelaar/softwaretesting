@@ -8,7 +8,7 @@ import Control.Monad
 import Lab4_5
 import Lab4_6
 
--- Time Spent: 6 hours
+-- Time Spent: 7 hours
 
 --
 -- Determines whether a given relation is symmetric.
@@ -44,6 +44,10 @@ pairs = liftM2 zip randomList randomList
 getNPairs :: Int -> IO [(Int, Int)]
 getNPairs n = take n `fmap` pairs
 
+-- Perform tests with a fixed amount of tuples. Was necessary to do this
+-- testing on Int, due to method of generating tuples. Should/can be altered
+-- for other input as well.
+
 testRel :: Int -> Int -> (Rel Int -> Rel Int)
                       -> (Rel Int -> Bool) -> IO ()
 testRel k n f r = if k == n then print (show n ++ " tests passed")
@@ -57,9 +61,10 @@ testRel k n f r = if k == n then print (show n ++ " tests passed")
 testRels :: (Rel Int -> Rel Int) -> (Rel Int -> Bool) -> IO ()
 testRels f p = testRel 1 10 f p
 
--- Testable properties
---
--- The intersection of two transitive relations is transitive.
--- A transitive relation is asymmetric if and only if it is irreflexive.
--- The converse of a transitive relation is always transitive: e.g. knowing that "is a subset of" is transitive and "is a superset of" is its converse, we can conclude that the latter is transitive as well.
--- By definition, a relation cannot be both symmetric and asymmetric
+-- QuickCheck
+
+-- Verify that the Symmetric Closure of the Symmetric Closure is the same output
+propSymClos :: Rel Int -> Rel Int -> Bool
+propSymClos xs ys = symClos xs == symClos (symClos xs)
+
+main = quickCheck propSymClos
