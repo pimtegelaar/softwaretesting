@@ -5,6 +5,9 @@ import System.Random
 import Test.QuickCheck
 import SetOrd
 
+-- Time Spent: 2 hours
+-- No time left to write tests anymore
+
 --
 -- Returns the intersection of two given sets.
 --
