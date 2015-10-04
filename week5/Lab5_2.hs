@@ -36,5 +36,6 @@ freeAtPos' s (r,c) xs = let
 sameConstraint :: Position -> Position -> Constrnt -> Bool
 sameConstraint p1 p2 constraint = filterConstraint p1 constraint == filterConstraint p2 constraint
 
+-- Returns only the partition of the constraint the position is in
 filterConstraint :: Position -> Constrnt -> [[Position]]
 filterConstraint p constraint = filter (elem p) constraint
