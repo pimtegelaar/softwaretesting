@@ -31,6 +31,7 @@ freeAtPos' s (r,c) xs = let
    ys = filter (elem (r,c)) xs 
  in 
    foldl1 intersect (map ((values \\) . map s) ys)
-             
-sameBlock :: Position -> Position -> Bool
-sameBlock (r,c) (r2,c2) = (filter (elem (r,c)) blockConstrnt) == (filter (elem (r2,c2)) blockConstrnt)
+       
+-- Checks if positions are within the same constraint (block, row, column, etc.)
+sameConstraint :: Position -> Position -> Constrnt -> Bool
+sameConstraint p p2 constraint = (filter (elem p) constraint) == (filter (elem p2) constraint)
