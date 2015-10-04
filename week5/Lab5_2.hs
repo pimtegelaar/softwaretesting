@@ -28,10 +28,13 @@ blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
 freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
 freeAtPos' s (r,c) xs = let 
-   ys = filter (elem (r,c)) xs 
+   ys = filterConstraint (r,c) xs 
  in 
    foldl1 intersect (map ((values \\) . map s) ys)
        
 -- Checks if positions are within the same constraint (block, row, column, etc.)
 sameConstraint :: Position -> Position -> Constrnt -> Bool
-sameConstraint p p2 constraint = (filter (elem p) constraint) == (filter (elem p2) constraint)
+sameConstraint p1 p2 constraint = filterConstraint p1 constraint == filterConstraint p2 constraint
+
+filterConstraint :: Position -> Constrnt -> [[Position]]
+filterConstraint p constraint = filter (elem p) constraint
