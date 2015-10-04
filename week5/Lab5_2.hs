@@ -31,3 +31,6 @@ freeAtPos' s (r,c) xs = let
    ys = filter (elem (r,c)) xs 
  in 
    foldl1 intersect (map ((values \\) . map s) ys)
+             
+sameBlock :: Position -> Position -> Bool
+sameBlock (r,c) (r2,c2) = (filter (elem (r,c)) blockConstrnt) == (filter (elem (r2,c2)) blockConstrnt)
