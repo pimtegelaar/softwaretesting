@@ -5,6 +5,8 @@ where
 import Data.List
 import System.Random
 
+-- Time spent: 4 hours
+
 type Row    = Int 
 type Column = Int 
 type Value  = Int

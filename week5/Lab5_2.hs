@@ -5,6 +5,9 @@ where
 import Data.List
 import Lecture5
 
+-- Time spent: 12 hours
+-- (unclear yet how the type modifications should be reflected by the functions, no proper implementation yet)
+
 type Position = (Row,Column)
 type Constrnt = [[Position]]
 
