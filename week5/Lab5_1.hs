@@ -65,7 +65,7 @@ showGrid [as,bs,cs,ds,es,fs,gs,hs,is] =
       putStrLn ("+---------+---------+---------+")
       showNrcRow ds; 
       putStrLn ("+   +-----|--+   +--|-----+   +");
-	  showRow es;
+      showRow es;
       putStrLn ("+   +-----|--+   +--|-----+   +");
       showNrcRow fs;
       putStrLn ("+---------+---------+---------+")
