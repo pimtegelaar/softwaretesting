@@ -13,3 +13,5 @@ testExample2 = uniqueSol (grid2sud (example2), constraints (grid2sud (example2))
 testExample3 = uniqueSol (grid2sud (example3), constraints (grid2sud (example3)))
 testExample4 = uniqueSol (grid2sud (example4), constraints (grid2sud (example4)))
 testExample5 = uniqueSol (grid2sud (example5), constraints (grid2sud (example5)))
+
+-- Should something with 'minimalize' be implemented?
