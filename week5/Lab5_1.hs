@@ -27,28 +27,52 @@ showVal d = show d
 showRow :: [Value] -> IO()
 showRow [a1,a2,a3,a4,a5,a6,a7,a8,a9] = 
    do  putChar '|'         ; putChar ' '
-       putStr (showVal a1) ; putChar ' '
-       putStr (showVal a2) ; putChar ' '
+       putStr (showVal a1) ; putChar ' ' ; putChar ' '
+       putStr (showVal a2) ; putChar ' ' ; putChar ' '
        putStr (showVal a3) ; putChar ' '
        putChar '|'         ; putChar ' '
-       putStr (showVal a4) ; putChar ' '
-       putStr (showVal a5) ; putChar ' '
+       putStr (showVal a4) ; putChar ' ' ; putChar ' '
+       putStr (showVal a5) ; putChar ' ' ; putChar ' '
        putStr (showVal a6) ; putChar ' '
        putChar '|'         ; putChar ' '
-       putStr (showVal a7) ; putChar ' '
-       putStr (showVal a8) ; putChar ' '
+       putStr (showVal a7) ; putChar ' ' ; putChar ' '
+       putStr (showVal a8) ; putChar ' ' ; putChar ' '
+       putStr (showVal a9) ; putChar ' '
+       putChar '|'         ; putChar '\n'
+
+showNrcRow :: [Value] -> IO()
+showNrcRow [a1,a2,a3,a4,a5,a6,a7,a8,a9] = 
+   do  putChar '|'         ; putChar ' '
+       putStr (showVal a1) ; putChar ' ' ; putChar '|'
+       putStr (showVal a2) ; putChar ' ' ; putChar ' '
+       putStr (showVal a3) ; putChar ' '
+       putChar '|'         ; putChar ' '
+       putStr (showVal a4) ; putChar '|' ; putChar ' '
+       putStr (showVal a5) ; putChar ' ' ; putChar '|'
+       putStr (showVal a6) ; putChar ' '
+       putChar '|'         ; putChar ' '
+       putStr (showVal a7) ; putChar ' ' ; putChar ' '
+       putStr (showVal a8) ; putChar '|' ; putChar ' '
        putStr (showVal a9) ; putChar ' '
        putChar '|'         ; putChar '\n'
 
 showGrid :: Grid -> IO()
 showGrid [as,bs,cs,ds,es,fs,gs,hs,is] =
-   do putStrLn ("+-------+-------+-------+")
-      showRow as; showRow bs; showRow cs
-      putStrLn ("+-------+-------+-------+")
-      showRow ds; showRow es; showRow fs
-      putStrLn ("+-------+-------+-------+")
-      showRow gs; showRow hs; showRow is
-      putStrLn ("+-------+-------+-------+")
+   do putStrLn ("+---------+---------+---------+")
+      showRow as; 
+      putStrLn ("+   +-----|--+   +--|-----+   +")
+      showNrcRow bs; showNrcRow cs
+      putStrLn ("+---------+---------+---------+")
+      showNrcRow ds; 
+      putStrLn ("+   +-----|--+   +--|-----+   +");
+	  showRow es;
+      putStrLn ("+   +-----|--+   +--|-----+   +");
+      showNrcRow fs;
+      putStrLn ("+---------+---------+---------+")
+      showNrcRow gs; showNrcRow hs;
+      putStrLn ("+   +-----|--+   +--|-----+   +")
+      showRow is
+      putStrLn ("+---------+---------+---------+")
 
 type Sudoku = (Row,Column) -> Value
 
@@ -91,6 +115,8 @@ freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c))
 freeInNrcSubgrid :: Sudoku -> (Row,Column) -> [Value]
 freeInNrcSubgrid s (r,c) = freeInSeq (nrcSubGrid s (r,c))
 
+-- Returns for a given position the set of Values that is still possible
+-- and doesn't violate any of the constraints.
 freeAtPos :: Sudoku -> (Row,Column) -> [Value]
 freeAtPos s (r,c) = 
    (freeInRow s r) 
@@ -117,6 +143,7 @@ nrcSubgridInjective :: Sudoku -> (Row,Column) -> Bool
 nrcSubgridInjective s (r,c) = injective vs where
    vs = filter (/= 0) (nrcSubGrid s (r,c))
 
+-- Determines whether a given Sodoku doesn't violate any of the constraints.
 consistent :: Sudoku -> Bool
 consistent s = and $
                [ rowInjective s r |  r <- positions ]
@@ -127,14 +154,17 @@ consistent s = and $
                ++
                [ nrcSubgridInjective s (r,c) | r <- [2,6], c <- [2,6]]
 
+-- Updates a Sodoku with a Value at a given position.
 extend :: Sudoku -> ((Row,Column),Value) -> Sudoku
 extend = update
 
 update :: Eq a => (a -> b) -> (a,b) -> a -> b 
 update f (y,z) x = if x == y then z else f x 
 
+-- Holds the remaining possible values for a given cell.
 type Constraint = (Row,Column,[Value])
 
+-- Holds the remaining possible values for a given Sodoku.
 type Node = (Sudoku,[Constraint])
 
 showNode :: Node -> IO()
@@ -179,15 +209,6 @@ constraints s = sortBy length3rd
                       (r,c) <- openPositions s ]
 
 data Tree a = T a [Tree a] deriving (Eq,Ord,Show)
-
-exmple1 = T 1 [T 2 [], T 3 []]
-exmple2 = T 0 [exmple1,exmple1,exmple1]
-
-grow :: (node -> [node]) -> node -> Tree node 
-grow step seed = T seed (map (grow step) (step seed))
-
-count :: Tree a -> Int 
-count (T _ ts) = 1 + sum (map count ts)
 
 search :: (node -> [node]) -> (node -> Bool) -> [node] -> [node]
 search children goal [] = []
