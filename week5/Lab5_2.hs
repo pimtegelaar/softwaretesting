@@ -31,7 +31,8 @@ freeAtPosition :: Sudoku -> Position -> [Value]
 freeAtPosition s p = freeAtPosition' s p allConstraints   
    
 freeAtPosition' :: Sudoku -> Position -> [Constrnt] -> [Value]
-freeAtPosition' s p [] = freeAtPos' s p rowConstrnt
+freeAtPosition' _ _ [] = []
+freeAtPosition' s p [c] = freeAtPos' s p c
 freeAtPosition' s p (c:cs) = (freeAtPos' s p c) `intersect` (freeAtPosition' s p cs)
    
        
