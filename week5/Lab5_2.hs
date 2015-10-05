@@ -11,11 +11,15 @@ import Lecture5
 type Position = (Row,Column)
 type Constrnt = [[Position]]
 
+nrcBlocks :: [[Int]]
+nrcBlocks = [[2..4],[6..8]]
+
 -- The regular constraints for Sudoku can now be stated as:
 
 rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
 columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
 blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+nrcConstrnt = [[(r,c) | r <- b1, c <- b2 ] | b1 <- nrcBlocks, b2 <- nrcBlocks ]
 
 allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
 
@@ -31,9 +35,27 @@ freeAtPosition :: Sudoku -> Position -> [Value]
 freeAtPosition s p = freeAtPosition' s p allConstraints   
    
 freeAtPosition' :: Sudoku -> Position -> [Constrnt] -> [Value]
-freeAtPosition' _ _ [] = []
-freeAtPosition' s p [c] = freeAtPos' s p c
+freeAtPosition' _ _ [] = [ x | x <- values]
 freeAtPosition' s p (c:cs) = (freeAtPos' s p c) `intersect` (freeAtPosition' s p cs)
+
+
+getValues :: Sudoku -> [Position] -> [Value]
+getValues s ps = filter (/=0) (map s ps)
+
+
+consistent1 :: Sudoku -> Bool
+consistent1 s = consistent' s allConstraints
+
+consistent' :: Sudoku -> [Constrnt] -> Bool
+consistent' _ [] = True
+consistent' s (c:cs) = (consistent2 s c) && (consistent' s cs) 
+
+
+consistent2 :: Sudoku -> Constrnt -> Bool
+consistent2 _ [] = True
+consistent2 s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent2 s ps)
+
+
    
        
 -- Checks if positions are within the same constraint (block, row, column, etc.)
