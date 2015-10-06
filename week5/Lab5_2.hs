@@ -156,6 +156,12 @@ freeInColumn s c =
 freeInSubgrid :: Sudoku -> (Row,Column) -> [Value]
 freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c)) 
    
+-- freeAtPos :: Sudoku -> (Row,Column) -> [Value]
+-- freeAtPos s (r,c) = 
+  -- (freeInRow s r) 
+   -- `intersect` (freeInColumn s c) 
+   -- `intersect` (freeInSubgrid s (r,c)) 
+   
 freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
 freeAtPos' s (r,c) xs = let 
    ys = filter (elem (r,c)) xs 
@@ -188,8 +194,9 @@ update f (y,z) x = if x == y then z else f x
 
 type Position = (Row,Column)
 type Constrnt = [[Position]]
+-- type Constraint = (Row,Column,[Value])
 
-type Node = (Sudoku,[Constrnt])
+--type Node = (Sudoku,[Constraint])
 
 rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
 columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
@@ -199,11 +206,11 @@ allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
 
 -- Adjust following Functions according new definitions
 
-showNode :: Node -> IO()
-showNode = showSudoku . fst
+-- showNode :: Node -> IO()
+-- showNode = showSudoku . fst
 
-solved  :: Node -> Bool
-solved = null . snd
+-- solved  :: Node -> Bool
+-- solved = null . snd
 
 -- extendNode :: Node -> Constraint -> [Node]
 -- extendNode (s,constraints) (r,c,vs) = 
@@ -241,7 +248,7 @@ openPositions s = [ (r,c) | r <- positions,
 -- constraints s = sortBy length3rd 
     -- [(r,c, freeAtPos s (r,c)) | 
                        -- (r,c) <- openPositions s ]
-
+                       
 -- Generic depth first search algorithm
 
 search :: (node -> [node]) 
