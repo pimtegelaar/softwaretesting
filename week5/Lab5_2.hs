@@ -13,6 +13,8 @@ type Row    = Int
 type Column = Int 
 type Value  = Int
 type Grid   = [[Value]]
+type Position = (Row,Column)
+type Constrnt = [[Position]]
 
 positions, values :: [Int]
 positions = [1..9]
@@ -21,65 +23,14 @@ values    = [1..9]
 blocks :: [[Int]]
 blocks = [[1..3],[4..6],[7..9]]
 
--- Sudoku Examples
+rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
+columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
+blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
-example1 :: Grid
-example1 = [[5,3,0,0,7,0,0,0,0],
-            [6,0,0,1,9,5,0,0,0],
-            [0,9,8,0,0,0,0,6,0],
-            [8,0,0,0,6,0,0,0,3],
-            [4,0,0,8,0,3,0,0,1],
-            [7,0,0,0,2,0,0,0,6],
-            [0,6,0,0,0,0,2,8,0],
-            [0,0,0,4,1,9,0,0,5],
-            [0,0,0,0,8,0,0,7,9]]
+allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
 
-example2 :: Grid
-example2 = [[0,3,0,0,7,0,0,0,0],
-            [6,0,0,1,9,5,0,0,0],
-            [0,9,8,0,0,0,0,6,0],
-            [8,0,0,0,6,0,0,0,3],
-            [4,0,0,8,0,3,0,0,1],
-            [7,0,0,0,2,0,0,0,6],
-            [0,6,0,0,0,0,2,8,0],
-            [0,0,0,4,1,9,0,0,5],
-            [0,0,0,0,8,0,0,7,9]]
-
-example3 :: Grid
-example3 = [[1,0,0,0,3,0,5,0,4],
-            [0,0,0,0,0,0,0,0,3],
-            [0,0,2,0,0,5,0,9,8], 
-            [0,0,9,0,0,0,0,3,0],
-            [2,0,0,0,0,0,0,0,7],
-            [8,0,3,0,9,1,0,6,0],
-            [0,5,1,4,7,0,0,0,0],
-            [0,0,0,3,0,0,0,0,0],
-            [0,4,0,0,0,9,7,0,0]]
-
-example4 :: Grid
-example4 = [[1,2,3,4,5,6,7,8,9],
-            [2,0,0,0,0,0,0,0,0],
-            [3,0,0,0,0,0,0,0,0],
-            [4,0,0,0,0,0,0,0,0],
-            [5,0,0,0,0,0,0,0,0],
-            [6,0,0,0,0,0,0,0,0],
-            [7,0,0,0,0,0,0,0,0],
-            [8,0,0,0,0,0,0,0,0],
-            [9,0,0,0,0,0,0,0,0]]
-
-example5 :: Grid
-example5 = [[1,0,0,0,0,0,0,0,0],
-            [0,2,0,0,0,0,0,0,0],
-            [0,0,3,0,0,0,0,0,0],
-            [0,0,0,4,0,0,0,0,0],
-            [0,0,0,0,5,0,0,0,0],
-            [0,0,0,0,0,6,0,0,0],
-            [0,0,0,0,0,0,7,0,0],
-            [0,0,0,0,0,0,0,8,0],
-            [0,0,0,0,0,0,0,0,9]]
 
 -- Showing stuff
-
 showVal :: Value -> String
 showVal 0 = " "
 showVal d = show d
@@ -131,60 +82,38 @@ grid2sud gr = \ (r,c) -> pos gr (r,c)
 showSudoku :: Sudoku -> IO()
 showSudoku = showGrid . sud2grid
 
--- Picking block of a position
-
-bl :: Int -> [Int]
-bl x = concat $ filter (elem x) blocks 
-
-subGrid :: Sudoku -> (Row,Column) -> [Value]
-subGrid s (r,c) = 
-  [ s (r',c') | r' <- bl r, c' <- bl c ]
 
 -- Check free Values
+
+freeAtPos :: Sudoku -> Position -> [Value]
+freeAtPos s p = freeAtPos' s p allConstraints
+   
+freeAtPos' :: Sudoku -> Position -> [Constrnt] -> [Value]
+freeAtPos' _ _ [] = [ x | x <- values]
+freeAtPos' s p (c:cs) = (freeAtPos2 s p c) `intersect` (freeAtPos' s p cs)
   
-freeInSeq :: [Value] -> [Value]
-freeInSeq seq = values \\ seq 
-
-freeInRow :: Sudoku -> Row -> [Value]
-freeInRow s r = 
-  freeInSeq [ s (r,i) | i <- positions  ]
-
-freeInColumn :: Sudoku -> Column -> [Value]
-freeInColumn s c = 
-  freeInSeq [ s (i,c) | i <- positions ]
-
-freeInSubgrid :: Sudoku -> (Row,Column) -> [Value]
-freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c)) 
-   
--- freeAtPos :: Sudoku -> (Row,Column) -> [Value]
--- freeAtPos s (r,c) = 
-  -- (freeInRow s r) 
-   -- `intersect` (freeInColumn s c) 
-   -- `intersect` (freeInSubgrid s (r,c)) 
-   
-freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
-freeAtPos' s (r,c) xs = let 
+freeAtPos2 :: Sudoku -> Position -> Constrnt -> [Value]
+freeAtPos2 s (r,c) xs = let 
    ys = filter (elem (r,c)) xs 
  in 
    foldl1 intersect (map ((values \\) . map s) ys)
+   
 
+-- Returns a list of filled values of a given list of positions   
 getValues :: Sudoku -> [Position] -> [Value]
 getValues s ps = filter (/=0) (map s ps)
 
+
 consistent :: Sudoku -> Bool
-consistent s = consistent' s allConstraints
+consistent s = all (\c -> consistent' s c) allConstraints
 
-consistent' :: Sudoku -> [Constrnt] -> Bool
+consistent' :: Sudoku -> Constrnt -> Bool
 consistent' _ [] = True
-consistent' s (c:cs) = (consistent2 s c) && (consistent' s cs) 
-
-consistent2 :: Sudoku -> Constrnt -> Bool
-consistent2 _ [] = True
-consistent2 s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent2 s ps)
+consistent' s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent' s ps)
                     
 -- Extension
                     
-extend :: Sudoku -> ((Row,Column),Value) -> Sudoku
+extend :: Sudoku -> (Position, Value) -> Sudoku
 extend = update
 
 update :: Eq a => (a -> b) -> (a,b) -> a -> b 
@@ -192,31 +121,24 @@ update f (y,z) x = if x == y then z else f x
 
 -- Searching for Solution
 
-type Position = (Row,Column)
-type Constrnt = [[Position]]
--- type Constraint = (Row,Column,[Value])
+-- A node represents a (partially) filled Sudoku and the remaining open positions.
+type Node = (Sudoku, [Position])
 
---type Node = (Sudoku,[Constraint])
 
-rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
-columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
-blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+showNode :: Node -> IO()
+showNode = showSudoku . fst
 
-allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
+-- If there are no more open positions, the Sudoku is solved.
+solved  :: Node -> Bool
+solved = (==[]) . snd
 
--- Adjust following Functions according new definitions
 
--- showNode :: Node -> IO()
--- showNode = showSudoku . fst
 
--- solved  :: Node -> Bool
--- solved = null . snd
-
--- extendNode :: Node -> Constraint -> [Node]
--- extendNode (s,constraints) (r,c,vs) = 
-   -- [(extend s ((r,c),v),
-     -- sortBy length3rd $ 
-         -- prune (r,c,v) constraints) | v <- vs ]
+--extendNode :: Node -> [Node]
+--extendNode (s, positions) = 
+--   [(extend s ((r,c),v),
+--     sortBy length3rd $ 
+--         prune (r,c,v) positions) | v <- vs ]
 
 length3rd :: (a,b,[c]) -> (a,b,[c]) -> Ordering
 length3rd (_,_,zs) (_,_,zs') = compare (length zs) (length zs')
@@ -231,28 +153,36 @@ length3rd (_,_,zs) (_,_,zs') = compare (length zs) (length zs')
         -- (x,y,zs\\[v]) : prune (r,c,v) rest
   -- | otherwise = (x,y,zs) : prune (r,c,v) rest
 
-sameblock :: (Row,Column) -> (Row,Column) -> Bool
-sameblock (r,c) (x,y) = bl r == bl x && bl c == bl y 
+       
+-- Checks if positions are within the same constraint (block, row, column, etc.)
+sameConstraint :: Position -> Position -> Constrnt -> Bool
+sameConstraint p1 p2 constraint = filterConstraint p1 constraint == filterConstraint p2 constraint
 
--- initNode :: Grid -> [Node]
--- initNode gr = let s = grid2sud gr in 
-              -- if (not . consistent) s then [] 
-              -- else [(s, constraints s)]
+-- Returns only the partition of the constraint the position is in
+filterConstraint :: Position -> Constrnt -> [[Position]]
+filterConstraint p constraint = filter (elem p) constraint
+
+-- Alternative version
+sameblock2 :: Position -> Position -> Constrnt -> Bool
+sameblock2 _ _ [] = False
+sameblock2 p1 p2 (c:xs) = ((p1 `elem` c) && (p2 `elem` c)) || sameblock2 p1 p2 xs
+
+
+
+initNode :: Grid -> [Node]
+initNode gr = let s = grid2sud gr in 
+              if (not . consistent) s then [] 
+              else [(s, openPositions s)]
 
 openPositions :: Sudoku -> [(Row,Column)]
 openPositions s = [ (r,c) | r <- positions,  
                             c <- positions, 
                             s (r,c) == 0 ]
 
--- constraints :: Sudoku -> [Constraint] 
--- constraints s = sortBy length3rd 
-    -- [(r,c, freeAtPos s (r,c)) | 
-                       -- (r,c) <- openPositions s ]
                        
 -- Generic depth first search algorithm
 
-search :: (node -> [node]) 
-       -> (node -> Bool) -> [node] -> [node]
+search :: (node -> [node]) -> (node -> Bool) -> [node] -> [node]
 search children goal [] = []
 search children goal (x:xs) 
   | goal x    = x : search children goal xs
@@ -260,20 +190,20 @@ search children goal (x:xs)
 
 -- Searching with Nodes
   
--- solveNs :: [Node] -> [Node]
--- solveNs = search succNode solved 
+solveNs :: [Node] -> [Node]
+solveNs = search succNode solved 
 
--- succNode :: Node -> [Node]
--- succNode (s,[]) = []
--- succNode (s,p:ps) = extendNode (s,ps) p 
+succNode :: Node -> [Node]
+succNode (s,[]) = []
+--succNode (s,p:ps) = extendNode (s,ps) p 
 
 -- Solve Functions
 
--- solveAndShow :: Grid -> IO[()]
--- solveAndShow gr = solveShowNs (initNode gr)
+solveAndShow :: Grid -> IO[()]
+solveAndShow gr = solveShowNs (initNode gr)
 
--- solveShowNs :: [Node] -> IO[()]
--- solveShowNs = sequence . fmap showNode . solveNs
+solveShowNs :: [Node] -> IO[()]
+solveShowNs = sequence . fmap showNode . solveNs
 
 -- Generate Sudokus
             
@@ -331,6 +261,7 @@ rsearch succ goal ionodes =
                              rsearch 
                                succ goal (return $ tail xs)
 
+
 -- genRandomSudoku :: IO Node
 -- genRandomSudoku = do [r] <- rsolveNs [emptyN]
                      -- return r
@@ -343,7 +274,7 @@ rsearch succ goal ionodes =
   -- singleton [x] = True
   -- singleton (x:y:zs) = False
 
-eraseS :: Sudoku -> (Row,Column) -> Sudoku
+eraseS :: Sudoku -> Position -> Sudoku
 eraseS s (r,c) (x,y) | (r,c) == (x,y) = 0
                      | otherwise      = s (x,y)
 
@@ -360,6 +291,66 @@ eraseS s (r,c) (x,y) | (r,c) == (x,y) = 0
 filledPositions :: Sudoku -> [(Row,Column)]
 filledPositions s = [ (r,c) | r <- positions,  
                               c <- positions, s (r,c) /= 0 ]
+
+
+
+
+-- Sudoku Examples
+
+example1 :: Grid
+example1 = [[5,3,0,0,7,0,0,0,0],
+            [6,0,0,1,9,5,0,0,0],
+            [0,9,8,0,0,0,0,6,0],
+            [8,0,0,0,6,0,0,0,3],
+            [4,0,0,8,0,3,0,0,1],
+            [7,0,0,0,2,0,0,0,6],
+            [0,6,0,0,0,0,2,8,0],
+            [0,0,0,4,1,9,0,0,5],
+            [0,0,0,0,8,0,0,7,9]]
+
+example2 :: Grid
+example2 = [[0,3,0,0,7,0,0,0,0],
+            [6,0,0,1,9,5,0,0,0],
+            [0,9,8,0,0,0,0,6,0],
+            [8,0,0,0,6,0,0,0,3],
+            [4,0,0,8,0,3,0,0,1],
+            [7,0,0,0,2,0,0,0,6],
+            [0,6,0,0,0,0,2,8,0],
+            [0,0,0,4,1,9,0,0,5],
+            [0,0,0,0,8,0,0,7,9]]
+
+example3 :: Grid
+example3 = [[1,0,0,0,3,0,5,0,4],
+            [0,0,0,0,0,0,0,0,3],
+            [0,0,2,0,0,5,0,9,8], 
+            [0,0,9,0,0,0,0,3,0],
+            [2,0,0,0,0,0,0,0,7],
+            [8,0,3,0,9,1,0,6,0],
+            [0,5,1,4,7,0,0,0,0],
+            [0,0,0,3,0,0,0,0,0],
+            [0,4,0,0,0,9,7,0,0]]
+
+example4 :: Grid
+example4 = [[1,2,3,4,5,6,7,8,9],
+            [2,0,0,0,0,0,0,0,0],
+            [3,0,0,0,0,0,0,0,0],
+            [4,0,0,0,0,0,0,0,0],
+            [5,0,0,0,0,0,0,0,0],
+            [6,0,0,0,0,0,0,0,0],
+            [7,0,0,0,0,0,0,0,0],
+            [8,0,0,0,0,0,0,0,0],
+            [9,0,0,0,0,0,0,0,0]]
+
+example5 :: Grid
+example5 = [[1,0,0,0,0,0,0,0,0],
+            [0,2,0,0,0,0,0,0,0],
+            [0,0,3,0,0,0,0,0,0],
+            [0,0,0,4,0,0,0,0,0],
+            [0,0,0,0,5,0,0,0,0],
+            [0,0,0,0,0,6,0,0,0],
+            [0,0,0,0,0,0,7,0,0],
+            [0,0,0,0,0,0,0,8,0],
+            [0,0,0,0,0,0,0,0,9]]
 
 -- genProblem :: Node -> IO Node
 -- genProblem n = do ys <- randomize xs
