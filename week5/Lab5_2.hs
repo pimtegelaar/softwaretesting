@@ -132,7 +132,9 @@ showNode = showSudoku . fst
 solved  :: Node -> Bool
 solved = (==[]) . snd
 
-
+-- The successors of a node are the nodes where the next open position is filled with all valid values.
+extendNode :: Node -> [Node]
+extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- values, consistent (extend s (p,v)) ]
 
 --extendNode :: Node -> [Node]
 --extendNode (s, positions) = 
@@ -195,7 +197,7 @@ solveNs = search succNode solved
 
 succNode :: Node -> [Node]
 succNode (s,[]) = []
---succNode (s,p:ps) = extendNode (s,ps) p 
+succNode (s,ps) = extendNode (s,ps) 
 
 -- Solve Functions
 
