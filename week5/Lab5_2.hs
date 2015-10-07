@@ -23,9 +23,13 @@ values    = [1..9]
 blocks :: [[Int]]
 blocks = [[1..3],[4..6],[7..9]]
 
+nrcBlocks :: [[Int]]
+nrcBlocks = [[2..4],[6..8]]
+
 rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
 columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
 blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
+nrcConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- nrcBlocks, b2 <- nrcBlocks ]
 
 allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
 
@@ -110,7 +114,18 @@ consistent s = all (\c -> consistent' s c) allConstraints
 consistent' :: Sudoku -> Constrnt -> Bool
 consistent' _ [] = True
 consistent' s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent' s ps)
-                    
+
+
+consistentPos :: Sudoku -> Position -> Bool
+consistentPos s p = all (\c -> consistent' s c) (constraintsForPos p)
+
+constraintsForPos :: Position -> [Constrnt]
+constraintsForPos p = [ constraintsForPos' p c | c <- allConstraints ]
+
+constraintsForPos' :: Position -> Constrnt -> Constrnt
+constraintsForPos' p c = [ sc | sc <- c, p `elem` sc ]
+
+          
 -- Extension
                     
 extend :: Sudoku -> (Position, Value) -> Sudoku
@@ -132,9 +147,10 @@ showNode = showSudoku . fst
 solved  :: Node -> Bool
 solved = (==[]) . snd
 
--- The successors of a node are the nodes where the next open position is filled with all valid values.
+-- The successors of a node are the nodes where the first next open position 
+-- is filled with all possible values that don't break any constraint.
 extendNode :: Node -> [Node]
-extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- values, consistent (extend s (p,v)) ]
+extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- values, consistentPos (extend s (p,v)) p ]
 
 --extendNode :: Node -> [Node]
 --extendNode (s, positions) = 
@@ -354,6 +370,18 @@ example5 = [[1,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,8,0],
             [0,0,0,0,0,0,0,0,9]]
 
+exampleNrc :: Grid
+exampleNrc = [[0,0,0,3,0,0,0,0,0],
+              [0,0,0,7,0,0,3,0,0],
+              [2,0,0,0,0,0,0,0,8],
+              [0,0,6,0,0,5,0,0,0],
+              [0,9,1,6,0,0,0,0,0],
+              [3,0,0,0,7,1,2,0,0],
+              [0,0,0,0,0,0,0,3,1],
+              [0,8,0,0,4,0,0,0,0],
+              [0,0,2,0,0,0,0,0,0]]
+
+              
 -- genProblem :: Node -> IO Node
 -- genProblem n = do ys <- randomize xs
                   -- return (minimalize n ys)
