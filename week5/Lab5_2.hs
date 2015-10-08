@@ -152,52 +152,39 @@ solved = (==[]) . snd
 extendNode :: Node -> [Node]
 extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- values, consistentPos (extend s (p,v)) p ]
 
---extendNode :: Node -> [Node]
---extendNode (s, positions) = 
---   [(extend s ((r,c),v),
---     sortBy length3rd $ 
---         prune (r,c,v) positions) | v <- vs ]
-
-length3rd :: (a,b,[c]) -> (a,b,[c]) -> Ordering
-length3rd (_,_,zs) (_,_,zs') = compare (length zs) (length zs')
-
--- prune :: (Row,Column,Value) 
-      -- -> [Constraint] -> [Constraint]
--- prune _ [] = []
--- prune (r,c,v) ((x,y,zs):rest)
-  -- | r == x = (x,y,zs\\[v]) : prune (r,c,v) rest
-  -- | c == y = (x,y,zs\\[v]) : prune (r,c,v) rest
-  -- | sameblock (r,c) (x,y) = 
-        -- (x,y,zs\\[v]) : prune (r,c,v) rest
-  -- | otherwise = (x,y,zs) : prune (r,c,v) rest
-
-       
--- Checks if positions are within the same constraint (block, row, column, etc.)
-sameConstraint :: Position -> Position -> Constrnt -> Bool
-sameConstraint p1 p2 constraint = filterConstraint p1 constraint == filterConstraint p2 constraint
-
--- Returns only the partition of the constraint the position is in
-filterConstraint :: Position -> Constrnt -> [[Position]]
-filterConstraint p constraint = filter (elem p) constraint
-
--- Alternative version
-sameblock2 :: Position -> Position -> Constrnt -> Bool
-sameblock2 _ _ [] = False
-sameblock2 p1 p2 (c:xs) = ((p1 `elem` c) && (p2 `elem` c)) || sameblock2 p1 p2 xs
-
-
 
 initNode :: Grid -> [Node]
 initNode gr = let s = grid2sud gr in 
               if (not . consistent) s then [] 
-              else [(s, openPositions s)]
+              else [(s, openSortedPositions s (openPositions s))]
 
-openPositions :: Sudoku -> [(Row,Column)]
+nrOfPossibleValues :: Sudoku -> Position -> Int
+nrOfPossibleValues s p = length (freeAtPos s p)
+              
+              
+openSortedPositions :: Sudoku -> [Position] -> [Position]
+openSortedPositions _ [] = []
+openSortedPositions s (p:ps) = 
+        let smallerSorted = openSortedPositions s [a | a <- ps, (nrOfPossibleValues s a) <= (nrOfPossibleValues s p)]
+            biggerSorted = openSortedPositions s [a | a <- ps, (nrOfPossibleValues s a) > (nrOfPossibleValues s p)]  
+        in  smallerSorted ++ [p] ++ biggerSorted                
+
+
+openSortedPositionsWithCount :: Sudoku -> [Position] -> [(Position, Int)]
+openSortedPositionsWithCount _ [] = []
+openSortedPositionsWithCount s (p:ps) = 
+        let smallerSorted = openSortedPositionsWithCount s [ a | a <- ps, (nrOfPossibleValues s a) <= (nrOfPossibleValues s p)]
+            biggerSorted = openSortedPositionsWithCount s [ a | a <- ps, (nrOfPossibleValues s a) > (nrOfPossibleValues s p)]  
+        in  smallerSorted ++ [(p, (nrOfPossibleValues s p))] ++ biggerSorted                
+
+openPos :: Grid -> [(Position, Int)]
+openPos g = openSortedPositionsWithCount (grid2sud g) (openPositions (grid2sud g))
+
+openPositions :: Sudoku -> [Position]
 openPositions s = [ (r,c) | r <- positions,  
                             c <- positions, 
                             s (r,c) == 0 ]
 
-                       
 -- Generic depth first search algorithm
 
 search :: (node -> [node]) -> (node -> Bool) -> [node] -> [node]
