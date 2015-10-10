@@ -19,7 +19,7 @@ blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
 getRandomBlocks :: [[(Row,Column)]] -> IO [(Row,Column)]
 getRandomBlocks c = do n <- randomize c
-                       return (n !! 0)
+                       return (concat (take 4 n))
 
 -- Generate a random Sudoku
 
