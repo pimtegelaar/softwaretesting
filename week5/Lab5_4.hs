@@ -19,7 +19,7 @@ blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
 getRandomBlocks :: [[(Row,Column)]] -> IO [(Row,Column)]
 getRandomBlocks c = do n <- randomize c
-                       return (concat (take 4 n))
+                       return (concat (take 3 n))
 
 -- Generate a random Sudoku
 
@@ -40,3 +40,17 @@ main' = do [r] <- rsolveNs [emptyN]
            showNode s
           
 -- Add checks for verification
+
+-- Count the number of empty blocks
+blocksEmpty :: Sudoku -> [[(Row,Column)]] -> Int
+blocksEmpty s [] = 0
+blocksEmpty s (block:blocks) = boolToInt(blockEmpty s block) + (blocksEmpty s blocks)
+
+--Check if a block is empty
+blockEmpty :: Sudoku -> [(Row,Column)] -> Bool
+blockEmpty s [] = True
+blockEmpty s (p:ps) = s p == 0 && blockEmpty s ps
+
+boolToInt :: Bool -> Int
+boolToInt False = 0
+boolToInt True  = 1
