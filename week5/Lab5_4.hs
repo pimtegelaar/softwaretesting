@@ -42,6 +42,7 @@ main' = do [r] <- rsolveNs [emptyN]
 -- Add checks for verification
 
 -- Count the number of empty blocks
+-- Example usage: blocksEmpty (grid2sud example4) blockConstrnt
 blocksEmpty :: Sudoku -> [[(Row,Column)]] -> Int
 blocksEmpty s [] = 0
 blocksEmpty s (block:blocks) = boolToInt(blockEmpty s block) + (blocksEmpty s blocks)
