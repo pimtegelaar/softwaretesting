@@ -29,17 +29,20 @@ example6 = [[0,0,0,0,7,0,0,0,0],
             [0,6,0,0,0,0,2,8,0],
             [0,0,0,4,1,9,0,0,5],
             [0,0,0,0,8,0,0,7,9]]
+            
+emptyBlocks :: Int
+emptyBlocks = 3
 
 -- Generate 3 random blocks
 getRandomBlocks :: [[(Row,Column)]] -> IO [(Row,Column)]
 getRandomBlocks c = do n <- randomize c
-                       return (concat (take 3 n))
+                       return (concat (take emptyBlocks n))
 
 -- Generate (random) problems until it matches 3 empty blocks
 genProblem' :: Node -> IO Node
 genProblem' n = do ns <- genRandomProblem n
                    c <- checkProblem ns
-                   if (c == 3) then 
+                   if (c == emptyBlocks) then 
                      return (ns)
                    else
                      do [r] <- rsolveNs [emptyN]
