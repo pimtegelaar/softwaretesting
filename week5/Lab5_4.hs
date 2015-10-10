@@ -33,10 +33,10 @@ genProblem' :: Node -> IO Node
 genProblem' n = do ys <- getRandomBlocks $ blockConstrnt
                    return (minimalize n ys)
 
-main :: IO ()
-main = do [r] <- rsolveNs [emptyN]
-          showNode r
-          s  <- genProblem' r
-          showNode s
+main' :: IO ()
+main' = do [r] <- rsolveNs [emptyN]
+           showNode r
+           s  <- genProblem' r
+           showNode s
           
 -- Add checks for verification
