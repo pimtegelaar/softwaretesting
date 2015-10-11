@@ -22,7 +22,7 @@ parseTests = [ Test "Parse Tests" testParse
              [ ("1+1", [Prop 1])
              , ("(1==>2)", [Impl (Prop 1) (Prop 2)])
              , ("(3<=>4)", [Equiv (Prop 3) (Prop 4)])
-			 , ("-5", [Neg (Prop 5)])
+                         , ("-5", [Neg (Prop 5)])
              ]
            ]
 
