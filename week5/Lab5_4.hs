@@ -5,15 +5,7 @@ where
 import Data.List
 import Lecture5
 
--- Time spent: 11 hours
-
--- Findings: a good amount of empty blocks is 3. It is still possible to generate
---           a Sudoku with 4 empty blocks, but this is much more difficult to find.
---           The minimalize function will fail in the 4 block case for most
---           generated problems, because it can't always guarantee a unique solution.
---           It may run for quite a while. For three empty blocks it is done in a few
---           tries. We check it now by just generating new problems. If it keeps
---           running we assume that it is not possible with this amount of empty blocks.
+-- Time spent: 12 hours
 
 blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 sampleNode = (grid2sud (example6), constraints (grid2sud (example6)))
@@ -85,3 +77,14 @@ boolToInt True  = 1
 blocksEmptyN :: Node -> [[(Row,Column)]] -> Int
 blocksEmptyN (s, (c:cs)) [] = 0
 blocksEmptyN (s, (_)) (block:blocks) = boolToInt(blockEmpty s block) + (blocksEmpty s blocks)
+
+{--
+ Findings:
+ A good amount of empty blocks is 3. It is still possible to generate
+ a Sudoku with 4 empty blocks, but this is much more difficult to find.
+ The minimalize function will fail in the 4 block case for most
+ generated problems, because it can't always guarantee a unique solution.
+ It may run for quite a while. For three empty blocks it is done in a few
+ tries. We check it now by just generating new problems. If it keeps
+ running we assume that it is not possible with this amount of empty blocks.
+--} 
