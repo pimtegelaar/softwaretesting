@@ -8,7 +8,6 @@ import System.Random
 -- Time spent: 16 hours
 
 -- Definitions
-
 type Row    = Int 
 type Column = Int 
 type Value  = Int
@@ -26,12 +25,14 @@ blocks = [[1..3],[4..6],[7..9]]
 nrcBlocks :: [[Int]]
 nrcBlocks = [[2..4],[6..8]]
 
+-- Definition of constraints
 rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
 columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
 blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 nrcConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- nrcBlocks, b2 <- nrcBlocks ]
 
-allConstraints = [rowConstrnt,columnConstrnt,blockConstrnt]
+-- List of the constraints the solver will use.
+allConstraints = [rowConstrnt, columnConstrnt, blockConstrnt]
 
 -- Showing stuff
 
@@ -89,17 +90,19 @@ showSudoku = showGrid . sud2grid
 -- Check free Values
 
 freeAtPos :: Sudoku -> Position -> [Value]
-freeAtPos s p = freeAtPos' s p allConstraints
+freeAtPos s pos = freeAtPos' s pos allConstraints
    
 freeAtPos' :: Sudoku -> Position -> [Constrnt] -> [Value]
 freeAtPos' _ _ [] = [ x | x <- values]
-freeAtPos' s p (c:cs) = (freeAtPos2 s p c) `intersect` (freeAtPos' s p cs)
+freeAtPos' s pos (c:cs) = (freeAtPos2 s pos c) `intersect` (freeAtPos' s pos cs)
   
 freeAtPos2 :: Sudoku -> Position -> Constrnt -> [Value]
-freeAtPos2 s (r,c) xs = let 
-   ys = filter (elem (r,c)) xs 
+freeAtPos2 s pos c = let 
+   ys = filter (elem pos) c 
  in 
-   if ys /= [] then foldl1 intersect (map ((values \\) . map s) ys) else [1..9]
+   -- If ys is empty, the position doesn't intersect with the constraint. (for example position (1,1) with nrcConstrnt)
+   -- In that case all values are possible.
+   if ys /= [] then foldl1 intersect (map ((values \\) . map s) ys) else values
    
 -- Returns a list of filled values of a given list of positions   
 getValues :: Sudoku -> [Position] -> [Value]
@@ -110,7 +113,7 @@ consistent s = all (\c -> consistent' s c) allConstraints
 
 consistent' :: Sudoku -> Constrnt -> Bool
 consistent' _ [] = True
-consistent' s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent' s ps)
+consistent' s (pos:ps) = getValues s pos == (nub (getValues s pos)) && (consistent' s ps)
 
 -- Extension
                     
@@ -166,16 +169,6 @@ openSortedPositions s (p:ps) =
             biggerSorted = openSortedPositions s [a | a <- ps, (nrOfPossibleValues s a) > (nrOfPossibleValues s p)]  
         in  smallerSorted ++ [p] ++ biggerSorted                
 
-openSortedPositionsWithCount :: Sudoku -> [Position] -> [(Position, Int)]
-openSortedPositionsWithCount _ [] = []
-openSortedPositionsWithCount s (p:ps) = 
-        let smallerSorted = openSortedPositionsWithCount s [ a | a <- ps, (nrOfPossibleValues s a) <= (nrOfPossibleValues s p)]
-            biggerSorted = openSortedPositionsWithCount s [ a | a <- ps, (nrOfPossibleValues s a) > (nrOfPossibleValues s p)]  
-        in  smallerSorted ++ [(p, (nrOfPossibleValues s p))] ++ biggerSorted                
-
-openPos :: Grid -> [(Position, Int)]
-openPos g = openSortedPositionsWithCount (grid2sud g) (openPositions (grid2sud g))
-
 openPositions :: Sudoku -> [Position]
 openPositions s = [ (r,c) | r <- positions,  
                             c <- positions, 
@@ -208,9 +201,6 @@ solveShowNs = sequence . fmap showNode . solveNs
 
 -- Generate Sudokus
             
--- emptyN :: Node
--- emptyN = (\ _ -> 0,constraints (\ _ -> 0))
-
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
 
@@ -226,24 +216,6 @@ randomize xs = do y <- getRandomItem xs
                     then return []
                     else do ys <- randomize (xs\\y)
                             return (head y:ys)
-
--- sameLen :: Constraint -> Constraint -> Bool
--- sameLen (_,_,xs) (_,_,ys) = length xs == length ys
-
--- getRandomCnstr :: [Constraint] -> IO [Constraint]
--- getRandomCnstr cs = getRandomItem (f cs) 
-  -- where f [] = []
-        -- f (x:xs) = takeWhile (sameLen x) (x:xs)
-
--- rsuccNode :: Node -> IO [Node]
--- rsuccNode (s,cs) = do xs <- getRandomCnstr cs
-                      -- if null xs 
-                        -- then return []
-                        -- else return 
-                          -- (extendNode (s,cs\\xs) (head xs))
-
--- rsolveNs :: [Node] -> IO [Node]
--- rsolveNs ns = rsearch rsuccNode solved (return ns)
 
 rsearch :: (node -> IO [node]) 
             -> (node -> Bool) -> IO [node] -> IO [node]
@@ -261,36 +233,6 @@ rsearch succ goal ionodes =
                            else 
                              rsearch 
                                succ goal (return $ tail xs)
-
--- genRandomSudoku :: IO Node
--- genRandomSudoku = do [r] <- rsolveNs [emptyN]
-                     -- return r
-
--- randomS = genRandomSudoku >>= showNode
-
--- uniqueSol :: Node -> Bool
--- uniqueSol node = singleton (solveNs [node]) where 
-  -- singleton [] = False
-  -- singleton [x] = True
-  -- singleton (x:y:zs) = False
-
-eraseS :: Sudoku -> Position -> Sudoku
-eraseS s (r,c) (x,y) | (r,c) == (x,y) = 0
-                     | otherwise      = s (x,y)
-
--- eraseN :: Node -> (Row,Column) -> Node
--- eraseN n (r,c) = (s, constraints s) 
-  -- where s = eraseS (fst n) (r,c) 
-
--- minimalize :: Node -> [(Row,Column)] -> Node
--- minimalize n [] = n
--- minimalize n ((r,c):rcs) | uniqueSol n' = minimalize n' rcs
-                         -- | otherwise    = minimalize n  rcs
-  -- where n' = eraseN n (r,c)
-
-filledPositions :: Sudoku -> [(Row,Column)]
-filledPositions s = [ (r,c) | r <- positions,  
-                              c <- positions, s (r,c) /= 0 ]
 
 -- Sudoku Examples
 
@@ -359,14 +301,3 @@ exampleNrc = [[0,0,0,3,0,0,0,0,0],
               [0,0,0,0,0,0,0,3,1],
               [0,8,0,0,4,0,0,0,0],
               [0,0,2,0,0,0,0,0,0]]
-             
--- genProblem :: Node -> IO Node
--- genProblem n = do ys <- randomize xs
-                  -- return (minimalize n ys)
-   -- where xs = filledPositions (fst n)
-
--- main :: IO ()
--- main = do [r] <- rsolveNs [emptyN]
-          -- showNode r
-          -- s  <- genProblem r
-          -- showNode s
