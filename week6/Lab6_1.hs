@@ -11,8 +11,8 @@ powers :: String -> [Integer]
 powers [] = []
 powers (x:xs) = if x == '1' then (2 ^ (length xs) : powers xs) else powers xs
 
-exM :: Integer -> Integer -> Integer -> Integer
-exM x e m = (exMs x (powers (binary e)) m) `mod` m
+exM2 :: Integer -> Integer -> Integer -> Integer
+exM2 x e m = (exMs x (powers (binary e)) m) `mod` m
 
 exMs :: Integer -> [Integer] -> Integer -> Integer
 exMs x [] m = 1
@@ -32,6 +32,3 @@ exM' :: Integer -> Integer -> Integer -> Integer
 exM' b 0 m = 1
 exM' b e m = t * exM' ((b * b) `mod` m) (shiftR e 1) m `mod` m
            where t = if testBit e 0 then b `mod` m else 1
-
-           
-           
