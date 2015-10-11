@@ -99,7 +99,7 @@ freeAtPos2 :: Sudoku -> Position -> Constrnt -> [Value]
 freeAtPos2 s (r,c) xs = let 
    ys = filter (elem (r,c)) xs 
  in 
-   foldl1 intersect (map ((values \\) . map s) ys)
+   if ys /= [] then foldl1 intersect (map ((values \\) . map s) ys) else [1..9]
    
 -- Returns a list of filled values of a given list of positions   
 getValues :: Sudoku -> [Position] -> [Value]
@@ -112,15 +112,6 @@ consistent' :: Sudoku -> Constrnt -> Bool
 consistent' _ [] = True
 consistent' s (p:ps) = getValues s p == (nub (getValues s p)) && (consistent' s ps)
 
-consistentPos :: Sudoku -> Position -> Bool
-consistentPos s p = all (\c -> consistent' s c) (constraintsForPos p)
-
-constraintsForPos :: Position -> [Constrnt]
-constraintsForPos p = [ constraintsForPos' p c | c <- allConstraints ]
-
-constraintsForPos' :: Position -> Constrnt -> Constrnt
-constraintsForPos' p c = [ sc | sc <- c, p `elem` sc ]
-     
 -- Extension
                     
 extend :: Sudoku -> (Position, Value) -> Sudoku
@@ -158,7 +149,7 @@ solved = (==[]) . snd
 -- The successors of a node are the nodes where the first next open position 
 -- is filled with all possible values that don't break any constraint.
 extendNode :: Node -> [Node]
-extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- values, consistentPos (extend s (p,v)) p ]
+extendNode (s, (p:positions)) = [ (extend s (p,v), positions) | v <- freeAtPos s p ]
 
 initNode :: Grid -> [Node]
 initNode gr = let s = grid2sud gr in 
