@@ -80,6 +80,7 @@ blocksEmptyN (s, (_)) (block:blocks) = boolToInt(blockEmpty s block) + (blocksEm
 
 {--
  Findings:
+ 
  A good amount of empty blocks is 3. It is still possible to generate
  a Sudoku with 4 empty blocks, but this is much more difficult to find.
  The minimalize function will fail in the 4 block case for most
