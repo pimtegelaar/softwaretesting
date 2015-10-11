@@ -5,9 +5,9 @@ where
 import Data.List
 import Lab5_1
 
--- Time spent: ? hours
+-- Time spent: 1 hours
 
--- This works but very, very slowly.
+-- Generate NRC Sudoku
 genNrc :: IO ()
 genNrc = do s <- genRandomSudoku
             (genProblem s) >>= showNode
