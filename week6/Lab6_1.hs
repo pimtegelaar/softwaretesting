@@ -32,3 +32,9 @@ exM' :: Integer -> Integer -> Integer -> Integer
 exM' b 0 m = 1
 exM' b e m = t * exM' ((b * b) `mod` m) (shiftR e 1) m `mod` m
            where t = if testBit e 0 then b `mod` m else 1
+           
+
+-- Another alternative method           
+exM :: Integer -> Integer -> Integer -> Integer
+exM x 1 m = x `mod` m
+exM x e m = ((exM x (e-1) m) * x) `mod` m
