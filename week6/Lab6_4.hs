@@ -10,9 +10,9 @@ main :: Int -> [Integer] -> IO Integer
 main _ [] = return 0
 main k (c:cs) = do p <- prime_tests_F k c
                    if p
-				     then return c
-				   else
-				     do main k cs
+                                     then return c
+                                   else
+                                     do main k cs
 
 -- With k = 1, k = 2, k = 3
 tenComposites1 = main 1 (take 10 composites)
