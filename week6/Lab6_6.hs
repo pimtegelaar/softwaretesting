@@ -9,10 +9,10 @@ import Lab6_5
 
 testMillerRabin :: Int -> [Integer] -> IO ()
 testMillerRabin _ [] = print "Succeeded"
-testMillerRabin k (c:cs) = do p <- primeMR n c
+testMillerRabin k (c:cs) = do p <- primeMR k c
                               if p then print ("False - Failed for " ++ show c)
                               else
-                                testMillerRabin n cs
+                                testMillerRabin k cs
 
 testMRwithComposites1 = testMillerRabin 1 (take 50 composites)
 testMRwithComposites5 = testMillerRabin 5 (take 50 composites)
