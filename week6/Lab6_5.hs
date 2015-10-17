@@ -12,6 +12,16 @@ carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) |
       isPrime (6*k+1), 
       isPrime (12*k+1), 
       isPrime (18*k+1) ]
+      
+      
+carmichael1 = main 1 [carmichael!!0]
+carmichael2 = main 2 [carmichael!!0]
+carmichael3 = main 3 [carmichael!!0]
+carmichael5 = main 5 [carmichael!!0]
+carmichael10 = main 10 [carmichael!!0]
+carmichael20 = main 10 [carmichael!!0]
+carmichael100 = main 10 [carmichael!!0]
+
           
 highComposites :: [Integer]
 highComposites = [ x | x <- [294400..], not (isPrime x) ]
